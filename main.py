@@ -1,3 +1,13 @@
-from modules import get_weather
+from modules import app
+import customtkinter as ctk
 
-get_weather(city_name="Dnipro123")
+ctk.set_appearance_mode("dark")
+
+def main():
+    try:
+        app.mainloop()
+    except Exception as e:
+        print(e)
+
+if __name__ == "__main__":
+    main()
