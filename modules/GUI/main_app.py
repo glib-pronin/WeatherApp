@@ -1,19 +1,15 @@
 import customtkinter as ctk
-from PIL import Image
+import tkinter as tk
+from PIL import Image, ImageTk
 from ..get_weather_data import get_weather
-import os, json
+import os
+
 
 assets_path = os.path.abspath(__file__+"/../../../assets")
 
-def printframe(event):
-    print("Frame")
-
-def print_lbl(event):
-    print("Label")
-
 class App(ctk.CTk):
     def __init__(self, width, height, name):
-        super().__init__(fg_color="red")
+        super().__init__()
         self.title(name)
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
@@ -21,61 +17,82 @@ class App(ctk.CTk):
         y = (screen_height-height)//2
         self.geometry(f'{width}x{height}+{x}+{y}')
         self.resizable(False, False)
+        # self.overrideredirect(True)
 
-        # Основна панель
-        self.main_panel = ctk.CTkFrame(self)
-        self.main_panel.pack(fill="both", expand=True)
-        self.main_panel.columnconfigure(1, weight=1)
+        # Canvas
+        self.canvas = tk.Canvas(self, width=width, height=height, highlightthickness=0)
+        self.canvas.pack(fill="both", expand=True)
+        self.canvas.bind("<Button-1>", self.show_main_window) 
+        self.update()
 
-        self.bg_image = ctk.CTkImage(Image.open(f"{assets_path}/images/background.png"), size=(width, height))
-        self.bg_label = ctk.CTkLabel(self.main_panel, image=self.bg_image, text="", fg_color="transparent")
-        self.bg_label.place(x=0, y=0, relwidth=1, relheight=1)
-        # Вміст
-        self.position_frame=ctk.CTkFrame(self.main_panel, fg_color="transparent")
-        self.position_frame.grid(row=0, column=0, pady=(10, 0), padx=20)
-        self.position_img = ctk.CTkImage(Image.open(f"{assets_path}/images/vector.png"), size=(16, 16))
-        self.icon_label = ctk.CTkLabel(self.position_frame, image=self.position_img, text="")
-        self.icon_label.grid(row=0, column=0)
-        self.position_label = ctk.CTkLabel(self.position_frame, text="Поточна позиція", font=("Roboto", 14))
-        self.position_label.grid(row=0, column=1, padx=10)
+        self.bg_image = ImageTk.PhotoImage(Image.open(f"{assets_path}/images/background.png").resize((self.canvas.winfo_width(), self.canvas.winfo_height())))
+        self.vector_icon = ImageTk.PhotoImage(Image.open(f"{assets_path}/images/vector.png").resize((20, 20)))
+        self.refresh_icon = ImageTk.PhotoImage(Image.open(f"{assets_path}/images/refresh.png").resize((62, 62)))
+        self.weather_icon = ImageTk.PhotoImage(Image.open(f"{assets_path}/icons/04d.png").resize((150, 150)))
 
-        self.refresh_img = ctk.CTkImage(Image.open(f"{assets_path}/images/refresh.png"), size=(50, 50))
-        self.refresh_label = ctk.CTkLabel(self.main_panel, image=self.refresh_img, text="", fg_color="#FFDF56")
-        self.refresh_label.grid(row=0, column=1, sticky="e", padx=20, pady=20)
-        self.refresh_label.bind("<Button-1>", lambda event: self.get_data(event, "Дніпро"))
-        self.refresh_label.configure(cursor="hand2")
 
-        self.city_label = ctk.CTkLabel(self.main_panel, text="Dnipro", font=("Roboto", 34, "bold"), fg_color="transparent")
-        self.city_label.grid(row=1, column=0, sticky="w", pady=20, padx=20)
+        # Фонове зображення
+        self.canvas.create_image(0, 0,  anchor="nw", image=self.bg_image)
+        print("Image size:", self.bg_image.width(), self.bg_image.height())
+        print("Canvas size:", self.canvas.winfo_width(), self.canvas.winfo_height())
 
-        self.temperature_frame=ctk.CTkFrame(self.main_panel, fg_color="transparent")
-        self.temperature_frame.grid(row=2, column=0, pady=(0, 20), padx=20, sticky="w")
-        self.weather_img = ctk.CTkImage(Image.open(f"{assets_path}/icons/02n.png"), size=(64, 64))
-        self.weather_img_label = ctk.CTkLabel(self.temperature_frame, image=self.weather_img, text="")
-        self.weather_img_label.grid(row=0, column=0, sticky="w")
+        # Поточна позиція (іконка + текст)
+        self.canvas.create_image(20, 40, anchor="nw", image=self.vector_icon)
+        self.canvas.create_text(50, 40, text="Поточна позиція", font=("Roboto", 14, "bold"), anchor="nw", fill="white")
 
-        self.temperature_label = ctk.CTkLabel(self.temperature_frame, text="11", font=("Roboto", 44, "bold"))
-        self.temperature_label.grid(row=0, column=1, sticky="ws")
+        # Refresh-кнопка
+        self.refresh_button = self.canvas.create_image(350, 20, anchor="nw", image=self.refresh_icon)
+        self.canvas.tag_bind(self.refresh_button, "<Button-1>", lambda event: self.get_data(event, "Дніпро"))
+        self.canvas.tag_bind(self.refresh_button, "<Enter>", lambda event: self.change_cursor(event, True))
+        self.canvas.tag_bind(self.refresh_button, "<Leave>", lambda event: self.change_cursor(event, False))
 
-        self.weather_label = ctk.CTkLabel(self.main_panel, text="Cloudy", font=("Roboto", 18))
-        self.weather_label.grid(row=3, column=0, sticky="w", pady=10, padx=20)
-        
-        self.temperature_range_label = ctk.CTkLabel(self.main_panel, text="Max: 20, min: 10", font=("Roboto", 18))
-        self.temperature_range_label.grid(row=4, column=0, sticky="w", padx=20)
+        # Назва міста
+        self.city_label = self.canvas.create_text(20, 90, text="Дніпро", font=("Roboto", 34, "bold"), anchor="nw", fill="white")
+
+        # Температура + іконка
+        self.temp_icon = self.canvas.create_image(-30, 145, anchor="nw", image=self.weather_icon)
+        self.temp_label = self.canvas.create_text(110, 175, text="28°", font=("Roboto", 50, "bold"), anchor="nw", fill="white")
+
+        # Стан погоди
+        self.weather_desc = self.canvas.create_text(20, 280, text="Хмарно", font=("Roboto", 18, "bold"), anchor="nw", fill="white")
+
+        # Діапазон температур
+        self.temp_range = self.canvas.create_text(20, 330, text="Макс.:28°, мін.:28°", font=("Roboto", 18), anchor="nw", fill="white")
 
         self.get_data("Дніпро")
-
+    
     def get_data(self, event=None, city_name="Дніпро"):
         data = get_weather(city_name)
         print(data)
         if not data:
             print("Помилка отримання даних з API")
             return
-        self.city_label.configure(text=city_name)
-        self.temperature_label.configure(text=f"{round(data['main']['temp'])}°")
-        self.weather_img = ctk.CTkImage(Image.open(f"{assets_path}/icons/{data['weather'][0]['icon']}.png"), size=(64, 64))
-        self.weather_img_label.configure(image=self.weather_img)
-        self.weather_label.configure(text=data["weather"][0]["description"].capitalize())
-        self.temperature_range_label.configure(text=f"Макс.:{round(data['main']['temp_max'])}°, мін.:{round(data['main']['temp_min'])}°")
+        icon = App.check_icon(data['weather'][0]['icon'])
+        self.canvas.itemconfig(self.city_label, text=city_name)
+        self.canvas.itemconfig(self.temp_label, text=f"{round(data['main']['temp'])}°")
+        self.canvas.itemconfig(self.weather_desc, text=data["weather"][0]["description"].capitalize())
+        self.canvas.itemconfig(self.temp_range,text=f"Макс.:{round(data['main']['temp_max'])}°, мін.:{round(data['main']['temp_min'])}°")
+        self.weather_icon = ImageTk.PhotoImage(Image.open(f"{assets_path}/icons/{icon}.png").resize((150, 150)))
+        self.canvas.itemconfig(self.temp_icon, image=self.weather_icon)
+
+    def change_cursor(self, event, hand):
+        self.canvas.config(cursor="hand2") if hand else self.canvas.config(cursor="")
+
+    def show_main_window(self, event):
+        items = self.canvas.find_overlapping(event.x, event.y, event.x, event.y)
+        if self.refresh_button in items:
+            print("Клік по кнопці оновлення, не відкриваємо модальне вікно")
+            return
+        self.main_window = ctk.CTkToplevel(width=1200, height=800)
+        self.main_window.grab_set()
+
+    @staticmethod
+    def check_icon(icon=None):
+        icons = [file.replace(".png", "") for file in os.listdir(f"{assets_path}/icons")]
+        if icon in icons:
+            return icon
+        else:
+            return "04d"
 
 app = App(350, 350, "WeatherApp")
+    
