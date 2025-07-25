@@ -1,0 +1,16 @@
+{
+    "dark":{
+        "next_theme": "light",
+        "switch_image": "dark_img",
+        "switch_pack": {"side": "right", "padx": [0, 5]},
+        "switch_fg": "white",
+        "frame_fg": "#485c64"
+    },
+    "light":{
+        "next_theme": "dark",
+        "switch_image": "light_img",
+        "switch_pack": {"side": "left", "padx": [5, 0]},
+        "switch_fg": "#485c64",
+        "frame_fg": "white"
+    }
+}
