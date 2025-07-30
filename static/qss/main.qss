@@ -1,0 +1,84 @@
+#weatherWidget {
+    background: qlineargradient(x1:0, y1:1, x2:1, y2:0, stop:0 #87CEFA, stop:1 #FFDF56);
+}
+
+#sunnyWeather {
+    background: qlineargradient(x1:0, y1:1, x2:1, y2:0, stop:0 #87CEFA, stop:1 #FFDF56);
+}
+
+#cloudyWeather {
+    background: qlineargradient(x1:0, y1:1, x2:1, y2:0, stop:0 #343636, stop:1 #5e3140);
+}
+
+#rainyWeather {
+    background: qlineargradient(x1:0, y1:1, x2:1, y2:0, stop:0 #bec3c7, stop:1 #160be3);
+}
+
+#snowyWeather {
+    background: qlineargradient(x1:0, y1:1, x2:1, y2:0, stop:0 #87CEFA, stop:1 #FFDF56);
+}
+
+QLabel {
+    color: white;
+    font-family: "Segoe UI";
+    font-weight: 400;
+}
+
+#refreshBtn {
+    border-radius: 5px;
+    border: none;
+    background-image: url('static/images/refresh.png');
+    background-position: center;
+}
+
+#refreshBtn:hover {
+    background-image: url('static/images/refresh_hover.png');
+}
+
+#position{
+    font-size: 16px;
+}
+
+#city{
+    font-size: 34px;
+    font-weight: 700;
+}
+
+#tempValue {
+    font-size: 46px;
+    font-weight: 700;
+}
+
+#description{
+    font-size: 18px;
+}
+
+#tempRange{
+    font-size: 18px;
+    color: rgba(255, 255, 255, 150);
+}
+
+#scrollArea, #scrollContent {
+    background-color: transparent;
+    border: none;
+}
+
+#cityFrame {
+    background-color: transparent;
+}
+
+#text1 {
+    font-size: 44px;
+    font-weight: 700;
+}
+
+#text2 {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+#text3 {
+    font-size: 12px;
+    font-weight: 600;
+}
+

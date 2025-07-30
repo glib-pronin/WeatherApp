@@ -1,0 +1,1 @@
+from .welcome_window import app
