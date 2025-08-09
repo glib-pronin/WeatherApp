@@ -1,21 +1,37 @@
 #weatherWidget {
-    background: qlineargradient(x1:0, y1:1, x2:1, y2:0, stop:0 #87CEFA, stop:1 #FFDF56);
+    background: qlineargradient(x1:0, y1:1, x2:1, y2:0, stop:0 #ff87cefa stop:1  #fd5);
 }
 
 #sunnyWeather {
     background: qlineargradient(x1:0, y1:1, x2:1, y2:0, stop:0 #87CEFA, stop:1 #FFDF56);
 }
 
+#nightweather {
+    background: qlineargradient(x1:0, y1:1, x2:1, y2:0, stop:0 #191970, stop:1 #8A2BE2);
+}
+
+#fewCloudyDayWeather {
+    background: qlineargradient(x1:0, y1:1, x2:1, y2:0, stop:0 #C0C0C0, stop:1 #FFD27F);
+}
+
+#fewCloudyNightWeather {
+    background: qlineargradient(x1:0, y1:1, x2:1, y2:0, stop:0 #696969, stop:1 #9974BC);
+}
+
 #cloudyWeather {
-    background: qlineargradient(x1:0, y1:1, x2:1, y2:0, stop:0 #343636, stop:1 #5e3140);
+    background: qlineargradient(x1:0, y1:1, x2:1, y2:0, stop:0 #A9A9A9, stop:1 #696969);
 }
 
 #rainyWeather {
-    background: qlineargradient(x1:0, y1:1, x2:1, y2:0, stop:0 #bec3c7, stop:1 #160be3);
+    background: qlineargradient(x1:0, y1:1, x2:1, y2:0, stop:0 #808080, stop:1 #5DACE2);
+}
+
+#thunderstormWeather {
+    background: qlineargradient(x1:0, y1:1, x2:1, y2:0, stop:0 #4A4A4A, stop:1 #5DACE2);
 }
 
 #snowyWeather {
-    background: qlineargradient(x1:0, y1:1, x2:1, y2:0, stop:0 #87CEFA, stop:1 #FFDF56);
+    background: qlineargradient(x1:0, y1:1, x2:1, y2:0, stop:0 #FFFFFF, stop:1 #B0C4DE);
 }
 
 QLabel {
@@ -25,42 +41,47 @@ QLabel {
 }
 
 #refreshBtn {
-    border-radius: 5px;
+    border-radius: 6px;
     border: none;
-    background-image: url('static/images/refresh.png');
-    background-position: center;
+    background-color: rgba(0, 0, 0, 51);
 }
 
 #refreshBtn:hover {
-    background-image: url('static/images/refresh_hover.png');
+    background-color: rgba(0, 0, 0, 85);
 }
 
 #position{
     font-size: 16px;
+    color: white;
 }
 
 #city{
     font-size: 34px;
     font-weight: 700;
+    color: white;
 }
 
 #tempValue {
     font-size: 46px;
     font-weight: 700;
+    color: white;
 }
 
 #description{
     font-size: 18px;
+    color: white;
 }
 
 #tempRange{
     font-size: 18px;
     color: rgba(255, 255, 255, 150);
+    color: white;
 }
 
 #scrollArea, #scrollContent {
     background-color: transparent;
     border: none;
+    
 }
 
 #cityFrame {
@@ -82,3 +103,37 @@ QLabel {
     font-weight: 600;
 }
 
+
+#searchInput {
+    border: none;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    padding: 0;
+    margin: 0;
+    font-size: 16px;
+    font-family: "Segoe UI";
+}
+
+#searchIcon {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+#cityAddFrame {
+    font-size: 16px;
+    font-family: "Segoe UI";
+    border: none;
+    border-radius: 5px;
+}
+
+#cityAddFrameText{
+    font-size: 16px;
+    padding-bottom: 1px;
+}
+
+#plusIcon{
+    border: 1px solid #2C2C2C;;
+    border-radius: 6px;
+    font-size: 12px;
+    padding-bottom: 2px;
+}

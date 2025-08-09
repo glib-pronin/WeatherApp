@@ -1,6 +1,5 @@
 #sideBar {
     background-color: rgba(44, 44, 44, 153);
-    /* background-color: rgba(255, 255, 255, 153); */
 }
 
 #themeSwitcher {
@@ -22,4 +21,25 @@
 
 #underline {
     border: 2px solid rgba(255, 255, 255, 80);
+}
+
+#searchInput {
+    background-color: rgba(44, 44, 44, 51);
+    color: white;
+}
+
+#searchIcon {
+    background-color: rgba(44, 44, 44, 51);
+}
+
+#cityAddFrame{
+    background-color: rgba(44, 44, 44, 51);
+}
+
+#cityAddFrame::hover{
+    background-color: rgba(44, 44, 44, 102);
+}
+
+#plusIcon{
+    border-color: white;
 }

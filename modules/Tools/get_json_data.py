@@ -1,6 +1,6 @@
 import json, os
 
-config_path = os.path.abspath(__file__ + "/../../static/config")
+config_path = os.path.abspath(__file__ + "/../../../static/configs")
 
 
 def get_json(filename: str):

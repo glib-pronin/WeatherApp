@@ -1,0 +1,10 @@
+{
+    "sunnyWeather": ["01d", "02d"],
+    "nightweather": ["01n", "02n"],
+    "fewCloudyDayWeather": ["03d"],
+    "fewCloudyNightWeather": ["03n"],
+    "cloudyWeather": ["04d", "04n"],
+    "rainyWeather": ["09d", "09n", "10d", "10n"],
+    "thunderstormWeather": ["11d", "11n"],
+    "snowyWeather": ["13d", "13n"]
+}

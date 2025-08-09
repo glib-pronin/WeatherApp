@@ -8,9 +8,7 @@ class CityFrame(QWidget):
         self.setFixedSize(QSize(width, height))
         self.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
         self.setObjectName("cityFrame")
-
         self.img_code = code
-        
         self.click_filter = ClickFilter(lambda city=self: on_click_callback(city_frame=city, change_theme=False))
         self.installEventFilter(self.click_filter)
 

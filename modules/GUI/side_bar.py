@@ -1,15 +1,16 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QScrollArea, QApplication
 from PyQt6.QtCore import Qt, QSize, QTimer
 from PyQt6.QtGui import QIcon
-from ..read_qss import read_qss_file
-from ..get_static import get_image_path
-from ..get_json_data import get_json
-from ..get_weather_data import get_weather
-from ..get_time import get_local_time
+from ..Tools import *
 from .city_frame import CityFrame
 
 class SideBar(QWidget):
-    def __init__(self, width, height, switch_theme_callback, refresh_style):
+
+    SWITCHER_HEIGHT = 24
+    SWITCHER_WIDTH = 52
+    SCROLL_WIDTH = 360
+
+    def __init__(self, width, height, switch_theme_callback, refresh_style, config_data):
         super().__init__()
         self.setFixedSize(width, height)
         self.setObjectName("sideBar")
@@ -17,24 +18,24 @@ class SideBar(QWidget):
         
         self.switch_theme_callback = switch_theme_callback
         self.refresh_style = refresh_style
-        self.cities_names = None
+        self.cities_names = config_data["cities"]
         self.cities_list = []
 
         self.side_bar_layout = QVBoxLayout(self)
         self.side_bar_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.side_bar_layout.setContentsMargins(10, 20, 20, 10)
-        self.side_bar_layout.setSpacing(10)
 
         self.theme_switcher = QPushButton()
         self.theme_switcher.setObjectName("themeSwitcher")
-        self.theme_switcher.setFixedSize(QSize(52, 24))
-        self.set_theme_icon("dark")
+        self.theme_switcher.setFixedSize(QSize(self.SWITCHER_WIDTH, self.SWITCHER_HEIGHT))
+        self.set_theme_icon(config_data["selected_theme"])
         self.theme_switcher.clicked.connect(self.switch_theme_callback)
 
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidgetResizable(True)
-        self.scroll_area.setFixedWidth(360)
+        self.scroll_area.setFixedWidth(self.SCROLL_WIDTH)
         self.scroll_area.setObjectName("scrollArea")
+        self.scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
         self.scroll_content = QWidget()
         self.scroll_content.setObjectName("scrollContent")
@@ -45,23 +46,27 @@ class SideBar(QWidget):
 
         self.side_bar_layout.addWidget(self.theme_switcher, alignment=Qt.AlignmentFlag.AlignRight)
         self.side_bar_layout.addWidget(self.scroll_area)
+        self.side_bar_layout.setSpacing(5)
         self.scroll_area.setWidget(self.scroll_content)
 
         self.init_cities()
-        self.selected_city = self.cities_list[0] if self.cities_list else None
+        self.selected_city = self.set_selected_city(config_data)
+                
+    def set_selected_city(self, config_data):
+        for city in self.cities_list:
+            if city.city_name.text() == config_data["selected_city_name"]:
+                return city
 
-    def trigger_click(self):
-        if self.selected_city:
-            self.selected_city.trigger_click()
-
-    def add_city_frame(self, name, code, time, temp, desc, tmax, tmin):
+    def add_city_frame(self, name, code, time, temp, desc, tmax, tmin, have_data=None):
         city = CityFrame(name, code, time, temp, desc, tmax, tmin, self.switch_theme_callback)
         self.scroll_layout.addWidget(city)
         self.cities_list.append(city)
+        if have_data:
+            city.trigger_click()
+            return
         QTimer.singleShot(0, lambda c=name, f=city: self.load_weather(c, f))
     
     def init_cities(self):
-        self.cities_names = get_json("cities.json")["cities"]
         for city in self.cities_names:
             self.add_city_frame(
                 city, code=None, 
@@ -79,11 +84,12 @@ class SideBar(QWidget):
                 tmax=data['main']['temp_max'], tmin=data['main']['temp_min']
                 )
         if self.selected_city == frame:
-            self.trigger_click()
+            self.selected_city.trigger_click()
                 
     def apply_theme(self, city_frame=None, change_theme=True, theme=None):
         if city_frame:
             self.choose_city_frame(city_frame)
+            return
         self.set_theme_icon(theme)
 
     def choose_city_frame(self, city_frame):
