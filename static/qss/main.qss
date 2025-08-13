@@ -1,4 +1,4 @@
-#weatherWidget {
+#weatherWidget, #welcomeWidget {
     background: qlineargradient(x1:0, y1:1, x2:1, y2:0, stop:0 #ff87cefa stop:1  #fd5);
 }
 
@@ -40,6 +40,10 @@ QLabel {
     font-weight: 400;
 }
 
+#welcomeWidget QLabel{
+    color: white;
+}
+
 #refreshBtn {
     border-radius: 6px;
     border: none;
@@ -50,32 +54,27 @@ QLabel {
     background-color: rgba(0, 0, 0, 85);
 }
 
-#position{
+#position, #weatherTempRange, #todayText, #forecastText{
     font-size: 16px;
-    color: white;
 }
 
 #city{
-    font-size: 34px;
+    font-size: 44px;
     font-weight: 700;
-    color: white;
 }
 
 #tempValue {
-    font-size: 46px;
+    font-size: 74px;
     font-weight: 700;
-    color: white;
 }
 
-#description{
-    font-size: 18px;
-    color: white;
+#description, #dateText{
+    font-size: 24px;
 }
 
 #tempRange{
-    font-size: 18px;
+    font-size: 24px;
     color: rgba(255, 255, 255, 150);
-    color: white;
 }
 
 #scrollArea, #scrollContent {
@@ -136,4 +135,21 @@ QLabel {
     border-radius: 6px;
     font-size: 12px;
     padding-bottom: 2px;
+}
+
+#cityInfo {
+    border-radius: 10px;
+}
+
+#searchingError{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#dialImg{
+    border-radius: 84px;
+}
+
+#timeText {
+    font-size: 28px;
 }

@@ -1,11 +1,13 @@
 {
     "cities": [
-        "Рига",
         "Барселона",
         "Суйчжоу",
         "Дніпро",
-        "Сеул"
+        "Сеул",
+        "Рига",
+        "Техас",
+        "Мадрид"
     ],
-    "selected_city_name": "Барселона",
-    "selected_theme": "light"
+    "selected_city_name": "Техас",
+    "selected_theme": "dark"
 }

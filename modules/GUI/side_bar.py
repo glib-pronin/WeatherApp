@@ -12,7 +12,7 @@ class SideBar(QWidget):
 
     def __init__(self, width, height, switch_theme_callback, refresh_style, config_data):
         super().__init__()
-        self.setFixedSize(width, height)
+        self.setFixedWidth(width)
         self.setObjectName("sideBar")
         self.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
         
@@ -57,8 +57,8 @@ class SideBar(QWidget):
             if city.city_name.text() == config_data["selected_city_name"]:
                 return city
 
-    def add_city_frame(self, name, code, time, temp, desc, tmax, tmin, have_data=None):
-        city = CityFrame(name, code, time, temp, desc, tmax, tmin, self.switch_theme_callback)
+    def add_city_frame(self, name, code, date_time, temp, desc, tmax, tmin, have_data=None):
+        city = CityFrame(name, code, date_time, temp, desc, tmax, tmin, self.switch_theme_callback)
         self.scroll_layout.addWidget(city)
         self.cities_list.append(city)
         if have_data:
@@ -70,17 +70,19 @@ class SideBar(QWidget):
         for city in self.cities_names:
             self.add_city_frame(
                 city, code=None, 
-                time="Завантаження...", temp=None, desc="Завантаження...", 
+                date_time="Завантаження...", temp=None, desc="Завантаження...", 
                 tmax=None, tmin=None
                 )     
             
     def load_weather(self, city_name, frame):
         data = get_weather(city_name)
         if data:  
-            local_time = get_local_time(timezone=data["timezone"])
+            local_date_time = get_local_date_time(timezone=data["timezone"])
+            code = data['weather'][0]['icon'] 
+            validated_code = code if code != "50n" and code != "50d" else "04n"
             frame.update_weather(
-                code=data['weather'][0]['icon'], 
-                time=local_time, temp=data['main']['temp'], desc=data["weather"][0]["description"], 
+                code=validated_code, 
+                date_time=local_date_time, temp=data['main']['temp'], desc=data["weather"][0]["description"], 
                 tmax=data['main']['temp_max'], tmin=data['main']['temp_min']
                 )
         if self.selected_city == frame:

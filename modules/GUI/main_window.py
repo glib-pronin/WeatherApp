@@ -11,7 +11,7 @@ class MainAppWindow(QMainWindow):
 
     def __init__(self, width, height, window_name, config_data):
         super().__init__()
-        self.setFixedSize(width, height)
+        self.setMinimumSize(width, height)
         self.setWindowTitle(window_name)
         self.theme = config_data["selected_theme"]
 
@@ -36,7 +36,7 @@ class MainAppWindow(QMainWindow):
         if change_theme:
             self.theme = "light" if self.theme == "dark" else "dark"
             change_file("config.json", key="selected_theme", value=self.theme)
-            self.main_content.set_search_icon(self.theme)
+            self.main_content.set_icons(self.theme)
             QApplication.instance().setStyleSheet(read_qss_file("main.qss") + "\n" + read_qss_file(f"{self.theme}.qss"))
         if city_frame:
             print(city_frame.img_code)
@@ -44,6 +44,7 @@ class MainAppWindow(QMainWindow):
             change_file("config.json", key="selected_city_name", value=city_frame.city_name.text())
             self.central_widget.setObjectName(weather_type)
             self.refresh_style(self.central_widget)
+            self.main_content.update_main_content(city_frame)
         self.side_bar.apply_theme(city_frame, change_theme, self.theme)
 
     def refresh_style(self, widget):
@@ -66,9 +67,11 @@ class MainAppWindow(QMainWindow):
             self.main_content.handle_search_result(False, error="Місто не знайдено")
             return
         self.main_content.handle_search_result(True)
+        code = data['weather'][0]['icon']
+        validated_code = code if code != "50n" and code != "50d" else "04n"
         self.side_bar.add_city_frame(
-            name=city_name, code=data['weather'][0]['icon'], 
-            time=get_local_time(timezone=data["timezone"]), 
+            name=city_name, code=validated_code, 
+            date_time=get_local_date_time(timezone=data["timezone"]), 
             temp=data['main']['temp'], desc=data["weather"][0]["description"], 
             tmax=data['main']['temp_max'], tmin=data['main']['temp_min'], have_data=True
         )

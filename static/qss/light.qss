@@ -1,4 +1,4 @@
-#sideBar {
+#sideBar, #dialImg {
     background-color: rgba(255, 255, 255, 153);
 }
 
@@ -19,12 +19,12 @@ QLabel {
     border-radius: 10px;
 }
 
-#text3 {
+#text3, #weatherTempRange {
     color: rgba(44, 44, 44, 204);
 }
 
 #underline {
-    border: 2px solid rgba(44, 44, 44, 80);
+    border: 2px solid rgba(44, 44, 44, 51);
 }
 
 #searchInput {
@@ -41,5 +41,9 @@ QLabel {
 }
 
 #cityAddFrame::hover{
+    background-color: rgba(255, 255, 255, 102);
+}
+
+#cityInfo {
     background-color: rgba(255, 255, 255, 102);
 }

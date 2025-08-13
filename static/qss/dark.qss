@@ -1,4 +1,4 @@
-#sideBar {
+#sideBar, #dialImg {
     background-color: rgba(44, 44, 44, 153);
 }
 
@@ -15,12 +15,12 @@
     border-radius: 10px;
 }
 
-#text3 {
+#text3, #weatherTempRange {
     color: rgba(255, 255, 255, 204);
 }
 
 #underline {
-    border: 2px solid rgba(255, 255, 255, 80);
+    border: 2px solid rgba(255, 255, 255, 51);
 }
 
 #searchInput {
@@ -43,3 +43,8 @@
 #plusIcon{
     border-color: white;
 }
+
+#cityInfo {
+    background-color: rgba(44, 44, 44, 102); 
+}
+

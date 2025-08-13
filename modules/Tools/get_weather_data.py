@@ -3,9 +3,12 @@ from .get_env_data import api_key
 
 colorama.init(autoreset=True)
 
-def get_weather(city_name: str):
+def get_weather(city_name: str, is_forecast: bool = False):
     print(city_name)
-    url = f'https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={api_key}&units=metric&lang=ua'
+    if not is_forecast:
+        url = f'https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={api_key}&units=metric&lang=ua'
+    else:
+        url = f'https://api.openweathermap.org/data/2.5/forecast?q={city_name}&appid={api_key}&units=metric&lang=ua'
     response = requests.get(url=url)
     if response.status_code==200:
         return response.json() 

@@ -6,24 +6,32 @@ from .click_filter import ClickFilter
 from .main_window import MainAppWindow
 import os
 
+config_data = get_json("config.json")
 app = QApplication([])
-app.setStyleSheet(read_qss_file("main.qss") + "\n" + read_qss_file(f"{get_json('config.json')['selected_theme']}.qss"))
+app.setStyleSheet(read_qss_file("main.qss") + "\n" + read_qss_file(f"{config_data['selected_theme']}.qss"))
 
 class MainWindow(QMainWindow):
-    def __init__(self, width, height, window_name):
+
+    REFRESH_ICON_SIZE = 44
+    WEATHER_IMAGE_SIZE = 76
+    POSITION_IMAGE_SIZE = 16
+    MAIN_WINDOW_WIDTH = 1200
+    MAIN_WINDOW_HEIGHT = 600
+
+    def __init__(self, width, height, window_name, config_data):
         super().__init__()
         self.window_name = window_name
         self.setWindowTitle(window_name)
         self.setFixedSize(QSize(width, height))
         self.click_filter = ClickFilter(self.open_main_window)
-        self.config_data = get_json("config.json")
+        self.config_data = config_data
 
         self.weather_widget = QWidget()
         self.weather_widget.installEventFilter(self.click_filter)
-        self.weather_widget.setObjectName("weatherWidget")
+        self.setObjectName("welcomeWidget")
 
         self.weather_widget_layout = QVBoxLayout(self.weather_widget)
-        self.weather_widget_layout.setSpacing(20)
+        self.weather_widget_layout.setSpacing(5)
         self.weather_widget_layout.setContentsMargins(20, 20, 20, 20)
         self.weather_widget_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.position_layout = QHBoxLayout()
@@ -37,12 +45,12 @@ class MainWindow(QMainWindow):
 
 
         self.position_img = QLabel()
-        self.position_img.setPixmap(QPixmap(get_image_path("images/vector.png")).scaled(16, 16, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
+        self.position_img.setPixmap(QPixmap(get_image_path("images/vector.png")).scaled(self.POSITION_IMAGE_SIZE, self.POSITION_IMAGE_SIZE, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
         self.position_lbl = QLabel(text="Поточна позиція")
         self.position_lbl.setObjectName("position")
         self.refresh_btn = QPushButton()
         self.refresh_btn.setIcon(QIcon(get_image_path("images/refresh.png")))
-        self.refresh_btn.setIconSize(QSize(44, 44))
+        self.refresh_btn.setIconSize(QSize(self.REFRESH_ICON_SIZE, self.REFRESH_ICON_SIZE))
         self.refresh_btn.setObjectName("refreshBtn")
         self.refresh_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.refresh_btn.clicked.connect(lambda: self.get_data(city_name=self.config_data["selected_city_name"]))
@@ -77,7 +85,6 @@ class MainWindow(QMainWindow):
 
     def get_data(self, city_name):
         data = get_weather(city_name)
-        # data = None
         print(data)
         if not data:
             print("Помилка отримання даних з API")   
@@ -85,18 +92,17 @@ class MainWindow(QMainWindow):
             return  
         self.city_lbl.setText(city_name)
         self.temp_value.setText(f"{round(data['main']['temp'])}°")
-        icon = self.check_icon(data['weather'][0]['icon'])
-        weather_type = select_weather_type(icon)
+        icon = data['weather'][0]['icon']
+        validated_icon = icon if icon != "50n" and icon != "50d" else "04n"
+        weather_type = select_weather_type(validated_icon)
         self.weather_widget.setObjectName(weather_type)
         self.refresh_style(self.weather_widget)
-        self.weather_img.setPixmap(QPixmap(get_image_path(f"icons/{icon}.png")).scaled(64, 64, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
+        self.weather_img.setPixmap(QPixmap(get_image_path(f"icons/{validated_icon}.png")).scaled(
+            self.WEATHER_IMAGE_SIZE, self.WEATHER_IMAGE_SIZE, 
+            Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation
+            ))
         self.desc_lbl.setText(data["weather"][0]["description"].capitalize())
         self.range_lbl.setText(f"Макс.:{round(data['main']['temp_max'])}°, мін.:{round(data['main']['temp_min'])}°")
-
-    def check_icon(self, icon: str):
-        if f"{icon}.png" in os.listdir(get_image_path("icons")):
-            return icon
-        return "02d"
     
     def refresh_style(self, widget):
         style = widget.style()
@@ -104,12 +110,13 @@ class MainWindow(QMainWindow):
         style.polish(widget)
     
     def open_main_window(self):
-        self.main_window = MainAppWindow(1200, 600, self.window_name, self.config_data)
+        self.main_window = MainAppWindow(self.MAIN_WINDOW_WIDTH, self.MAIN_WINDOW_HEIGHT, self.window_name, self.config_data)
         self.main_window.show()
         self.close()
 
 
     
-main_window = MainWindow(350, 350, "WeatherApp")
+main_window = MainWindow(350, 350, "WeatherApp", config_data)
 main_window.show()
+
 
