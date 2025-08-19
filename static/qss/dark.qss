@@ -1,5 +1,5 @@
-#sideBar, #dialImg {
-    background-color: rgba(44, 44, 44, 153);
+#sideBar {
+    background-color: rgba(0, 0, 0, 102);
 }
 
 #themeSwitcher {
@@ -11,7 +11,7 @@
 }
 
 #selectedCity {
-    background-color: rgba(44, 44, 44, 204);
+    background-color: rgba(0, 0, 0, 51);
     border-radius: 10px;
 }
 
@@ -24,20 +24,16 @@
 }
 
 #searchInput {
-    background-color: rgba(44, 44, 44, 51);
+    background-color: rgba(0, 0, 0, 51);
     color: white;
 }
 
-#searchIcon {
-    background-color: rgba(44, 44, 44, 51);
-}
-
-#cityAddFrame{
-    background-color: rgba(44, 44, 44, 51);
+#searchIcon, #cityAddFrame {
+    background-color: rgba(0, 0, 0, 51);
 }
 
 #cityAddFrame::hover{
-    background-color: rgba(44, 44, 44, 102);
+    background-color: rgba(0, 0, 0, 102);
 }
 
 #plusIcon{
@@ -45,6 +41,9 @@
 }
 
 #cityInfo {
-    background-color: rgba(44, 44, 44, 102); 
+    background-color: rgba(0, 0, 0, 51); 
 }
 
+#dialImg {
+    background-color: rgba(0, 0, 0, 51);
+}

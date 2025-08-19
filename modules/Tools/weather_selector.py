@@ -1,8 +1,8 @@
-from .get_json_data import get_json
+from .json_data import get_json
 
 weather_types = get_json("weather_types.json")
 
-def select_weather_type(img_code):
+def select_weather_type(img_code: str):
         for type, codes in weather_types.items():
             if img_code in codes:
                 return type

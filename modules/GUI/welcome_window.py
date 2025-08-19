@@ -4,32 +4,32 @@ from PyQt6.QtGui import QPixmap, QIcon
 from ..Tools import *
 from .click_filter import ClickFilter
 from .main_window import MainAppWindow
-import os
 
 config_data = get_json("config.json")
 app = QApplication([])
 app.setStyleSheet(read_qss_file("main.qss") + "\n" + read_qss_file(f"{config_data['selected_theme']}.qss"))
 
 class MainWindow(QMainWindow):
-
     REFRESH_ICON_SIZE = 44
     WEATHER_IMAGE_SIZE = 76
     POSITION_IMAGE_SIZE = 16
     MAIN_WINDOW_WIDTH = 1200
-    MAIN_WINDOW_HEIGHT = 600
+    MAIN_WINDOW_HEIGHT = 800
 
     def __init__(self, width, height, window_name, config_data):
         super().__init__()
         self.window_name = window_name
         self.setWindowTitle(window_name)
         self.setFixedSize(QSize(width, height))
+        self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
+        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, True)
+        self.setObjectName("welcomeWidget")
         self.click_filter = ClickFilter(self.open_main_window)
         self.config_data = config_data
-
+        # Основний контейнер
         self.weather_widget = QWidget()
         self.weather_widget.installEventFilter(self.click_filter)
-        self.setObjectName("welcomeWidget")
-
+        # Усі layouts
         self.weather_widget_layout = QVBoxLayout(self.weather_widget)
         self.weather_widget_layout.setSpacing(5)
         self.weather_widget_layout.setContentsMargins(20, 20, 20, 20)
@@ -42,8 +42,7 @@ class MainWindow(QMainWindow):
         self.temp_layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
         self.small_layout = QVBoxLayout()
         self.small_layout.setSpacing(5)
-
-
+        # Верхній рядок з іконкою позиції, надписом та кнопкою оновлення
         self.position_img = QLabel()
         self.position_img.setPixmap(QPixmap(get_image_path("images/vector.png")).scaled(self.POSITION_IMAGE_SIZE, self.POSITION_IMAGE_SIZE, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
         self.position_lbl = QLabel(text="Поточна позиція")
@@ -54,19 +53,19 @@ class MainWindow(QMainWindow):
         self.refresh_btn.setObjectName("refreshBtn")
         self.refresh_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.refresh_btn.clicked.connect(lambda: self.get_data(city_name=self.config_data["selected_city_name"]))
-
+        # Обране місто
         self.city_lbl = QLabel(text="-")
         self.city_lbl.setObjectName("city")
-
+        # Рядок з іконкою погоди та температурою
         self.weather_img = QLabel()
         self.temp_value = QLabel(text="-°")
         self.temp_value.setObjectName("tempValue")
-
+        # Опис погоди та мін/макс значення температури
         self.desc_lbl = QLabel(text="")
         self.desc_lbl.setObjectName("description")
         self.range_lbl = QLabel(text="—")
         self.range_lbl.setObjectName("tempRange")
-
+        # Розташування
         self.position_layout.addWidget(self.position_img)
         self.position_layout.addWidget(self.position_lbl)
         self.position_layout.addStretch()
@@ -79,15 +78,14 @@ class MainWindow(QMainWindow):
         self.small_layout.addWidget(self.desc_lbl)
         self.small_layout.addWidget(self.range_lbl)
         self.weather_widget_layout.addLayout(self.small_layout)
-
         self.setCentralWidget(self.weather_widget)
-        self.get_data(city_name=self.config_data["selected_city_name"])
+        self.get_data(city_name=self.config_data["selected_city_name"]) # Завантаження погоди
 
-    def get_data(self, city_name):
-        data = get_weather(city_name)
-        print(data)
+    def get_data(self, city_name: str):
+        data = get_weather(city_name, forecast_type = "current")
         if not data:
             print("Помилка отримання даних з API")   
+            self.weather_widget.setObjectName("welcomeWidget")
             self.desc_lbl.setText("Помилка отримання даних")
             return  
         self.city_lbl.setText(city_name)
@@ -114,9 +112,5 @@ class MainWindow(QMainWindow):
         self.main_window.show()
         self.close()
 
-
-    
 main_window = MainWindow(350, 350, "WeatherApp", config_data)
 main_window.show()
-
-

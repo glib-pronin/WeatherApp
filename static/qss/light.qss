@@ -1,9 +1,9 @@
-#sideBar, #dialImg {
+#sideBar {
     background-color: rgba(255, 255, 255, 153);
 }
 
 #themeSwitcher {
-    background-color:  #2C2C2C;
+    background-color:  rgba(0, 0, 0, 51);
     border-radius: 12px;
     text-align: left;
     padding-left: 3px;
@@ -15,7 +15,7 @@ QLabel {
 }
 
 #selectedCity{
-    background-color: rgba(255, 255, 255, 204);
+    background-color: rgba(0, 0, 0, 51);
     border-radius: 10px;
 }
 
@@ -32,11 +32,7 @@ QLabel {
     color: #2C2C2C;
 }
 
-#searchIcon {
-    background-color: rgba(255, 255, 255, 51);
-}
-
-#cityAddFrame{
+#searchIcon, #cityAddFrame {
     background-color: rgba(255, 255, 255, 51);
 }
 
@@ -45,5 +41,9 @@ QLabel {
 }
 
 #cityInfo {
-    background-color: rgba(255, 255, 255, 102);
+    background-color: rgba(255, 255, 255, 51);
+}
+
+#dialImg {
+    background-color: rgba(255, 255, 255, 51);
 }

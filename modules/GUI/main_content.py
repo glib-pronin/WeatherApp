@@ -3,31 +3,31 @@ from PyQt6.QtCore import QSize, Qt
 from PyQt6.QtGui import QPixmap
 from ..Tools import get_image_path
 from .click_filter import ClickFilter
-from .MainContent import WeatherWidget, TimeWidget, ForecastWidget
+from .MainContent import WeatherWidget, TimeWidget, ForecastWidget, HourlyWidget
 
 class MainContent(QWidget):
-
     SEARCHING_PANEL_HEIGHT = 36
     BASE_ADDING_WIDTH = 100
     ERROR_PADDING = 45
     INPUT_WIDTH = 225
     ICON_SIZE = 12
+    FORECAST_WIDGET_HEIGHT = 157
+    HOURLY_WIDGET_HEIGHT = 197
 
     def __init__(self, width, height, config_data, on_click_callback):
         print(width, height)
         super().__init__()
-        # self.setFixedSize(QSize(width, height))
         self.setObjectName("mainContent")
         self.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
-
         self.click_filter = ClickFilter(on_click_callback)
+        self.current_city = None
+        # Основний layout 
         self.main_layout = QVBoxLayout(self)
         self.main_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.main_layout.setContentsMargins(10, 20, 20, 20)
         self.main_layout.setSpacing(20)
-
-        self.top_panel = QHBoxLayout()
-
+        self.top_panel = QHBoxLayout()  # верхня панель для пошуку та додавання
+        # Кнопка додавання 
         self.adding_frame = QWidget()
         self.adding_frame.setFixedSize(QSize(self.BASE_ADDING_WIDTH, self.SEARCHING_PANEL_HEIGHT))
         self.adding_frame.setObjectName("cityAddFrame")
@@ -43,7 +43,7 @@ class MainContent(QWidget):
         self.adding_frame.setVisible(False)
         self.adding_frame.setCursor(Qt.CursorShape.PointingHandCursor)
         self.adding_frame.installEventFilter(self.click_filter)
-
+        # Поле пошуку
         self.search_layout = QHBoxLayout()
         self.search_icon = QLabel()
         self.search_icon.setFixedSize(QSize(self.SEARCHING_PANEL_HEIGHT, self.SEARCHING_PANEL_HEIGHT))
@@ -52,8 +52,8 @@ class MainContent(QWidget):
         self.search_input = QLineEdit()
         self.search_input.setObjectName("searchInput")
         self.search_input.setFixedSize(QSize(self.INPUT_WIDTH, self.SEARCHING_PANEL_HEIGHT))
+        self.search_input.setPlaceholderText("Пошук")
         self.search_input.textEdited.connect(self.show_adding_frame)
-
         self.search_layout.addWidget(self.search_icon)
         self.search_layout.addWidget(self.search_input)
         self.search_layout.setSpacing(0)
@@ -62,7 +62,7 @@ class MainContent(QWidget):
         self.top_panel.setSpacing(10)
         self.top_panel.setAlignment(Qt.AlignmentFlag.AlignRight)
         self.main_layout.addLayout(self.top_panel)
-        
+        # Основні панелі: місто, час, прогноз на 5 днів
         self.panels_layout = QVBoxLayout()
         self.panels_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.panels_layout.setSpacing(10)
@@ -71,14 +71,14 @@ class MainContent(QWidget):
         self.city_info_layout.addWidget(self.weather_info_widget)
         self.time_info_widget = QWidget()
         self.city_info_layout.addWidget(self.time_info_widget)
-        
         self.city_info_layout.setSpacing(10)
         self.panels_layout.addLayout(self.city_info_layout)
-
         self.forecast_info_widget = QWidget()
         self.panels_layout.addWidget(self.forecast_info_widget)
+        self.hourly_info_widget = QWidget()
+        self.panels_layout.addWidget(self.hourly_info_widget)
         self.main_layout.addLayout(self.panels_layout)
-        self.set_icons(config_data["selected_theme"])
+        self.set_icons(config_data["selected_theme"]) # Встановлюємо потрібні іконки
 
     def resizeEvent(self, a0):
         self.city_info_layout.setSpacing(self.width()//79)
@@ -88,6 +88,8 @@ class MainContent(QWidget):
         self.search_icon.setPixmap(QPixmap(get_image_path(f"images/search_icon_{theme}.png")).scaled(16, 16, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
         if isinstance(self.forecast_info_widget, ForecastWidget):
             self.forecast_info_widget.update_btn_icons(theme)
+        if isinstance(self.hourly_info_widget, HourlyWidget):
+            self.hourly_info_widget.update_weather_icons(theme)
     
     def show_adding_frame(self):
         self.adding_frame.setVisible(bool(self.search_input.text().strip()))
@@ -122,15 +124,18 @@ class MainContent(QWidget):
         self.weather_info_widget = self.replace_widget(self.weather_info_widget, self.new_weather_info_widget, self.city_info_layout)
         self.new_time_info_widget = TimeWidget(height=303, city_date_time=city_frame.date_time)
         self.time_info_widget = self.replace_widget(self.time_info_widget, self.new_time_info_widget, self.city_info_layout)
-        self.new_forecast_info_widget = ForecastWidget(height=157, city_name=city_frame.city_name.text(), city_desc=city_frame.weather_desc.text())
-        self.forecast_info_widget = self.replace_widget(self.forecast_info_widget, self.new_forecast_info_widget, self.panels_layout)
+        if self.current_city != city_frame.city_name.text():
+            self.new_forecast_info_widget = ForecastWidget(height=self.FORECAST_WIDGET_HEIGHT, city_name=city_frame.city_name.text(), city_desc=city_frame.weather_desc.text())
+            self.forecast_info_widget = self.replace_widget(self.forecast_info_widget, self.new_forecast_info_widget, self.panels_layout)
+            self.new_hourly_info_widget = HourlyWidget(height=self.HOURLY_WIDGET_HEIGHT, city_eng_name = city_frame.eng_name)
+            self.hourly_info_widget = self.replace_widget(self.hourly_info_widget, self.new_hourly_info_widget, self.panels_layout)
+        self.current_city = city_frame.city_name.text()
 
     def replace_widget(self, old_widget, new_widget, layout):
         layout.removeWidget(old_widget)
         old_widget.deleteLater()
         layout.addWidget(new_widget)
         return new_widget
-
 
     def refresh_style(self, widget):
         style = widget.style()

@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 
+# Словник з перекладом днів тижня
 translated_date_of_week = {
     "Monday": "Понеділок",
     "Tuesday": "Вівторок",

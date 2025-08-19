@@ -5,50 +5,45 @@ from ..Tools import *
 from .city_frame import CityFrame
 
 class SideBar(QWidget):
-
     SWITCHER_HEIGHT = 24
     SWITCHER_WIDTH = 52
     SCROLL_WIDTH = 360
 
-    def __init__(self, width, height, switch_theme_callback, refresh_style, config_data):
+    def __init__(self, width, switch_theme_callback, refresh_style, config_data):
         super().__init__()
         self.setFixedWidth(width)
         self.setObjectName("sideBar")
         self.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
-        
         self.switch_theme_callback = switch_theme_callback
         self.refresh_style = refresh_style
         self.cities_names = config_data["cities"]
         self.cities_list = []
-
+        # Головний layout
         self.side_bar_layout = QVBoxLayout(self)
         self.side_bar_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.side_bar_layout.setContentsMargins(10, 20, 20, 10)
-
+        # Перемикач теми
         self.theme_switcher = QPushButton()
         self.theme_switcher.setObjectName("themeSwitcher")
         self.theme_switcher.setFixedSize(QSize(self.SWITCHER_WIDTH, self.SWITCHER_HEIGHT))
         self.set_theme_icon(config_data["selected_theme"])
         self.theme_switcher.clicked.connect(self.switch_theme_callback)
-
+        # Панель з містами
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidgetResizable(True)
         self.scroll_area.setFixedWidth(self.SCROLL_WIDTH)
         self.scroll_area.setObjectName("scrollArea")
         self.scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-
         self.scroll_content = QWidget()
         self.scroll_content.setObjectName("scrollContent")
-
         self.scroll_layout = QVBoxLayout(self.scroll_content)
         self.scroll_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.scroll_layout.setSpacing(5)
-
         self.side_bar_layout.addWidget(self.theme_switcher, alignment=Qt.AlignmentFlag.AlignRight)
         self.side_bar_layout.addWidget(self.scroll_area)
         self.side_bar_layout.setSpacing(5)
         self.scroll_area.setWidget(self.scroll_content)
-
+        # Завантаження збережених міст та показ обраного
         self.init_cities()
         self.selected_city = self.set_selected_city(config_data)
                 
@@ -57,25 +52,25 @@ class SideBar(QWidget):
             if city.city_name.text() == config_data["selected_city_name"]:
                 return city
 
-    def add_city_frame(self, name, code, date_time, temp, desc, tmax, tmin, have_data=None):
-        city = CityFrame(name, code, date_time, temp, desc, tmax, tmin, self.switch_theme_callback)
+    def add_city_frame(self, name, code, date_time, temp, desc, tmax, tmin, eng_name, have_data=None):
+        city = CityFrame(name, code, date_time, temp, desc, tmax, tmin, eng_name, self.switch_theme_callback)
         self.scroll_layout.addWidget(city)
         self.cities_list.append(city)
-        if have_data:
+        if have_data: # Якщо всі дані вже є, то QTimer не потрібен 
             city.trigger_click()
             return
         QTimer.singleShot(0, lambda c=name, f=city: self.load_weather(c, f))
     
     def init_cities(self):
         for city in self.cities_names:
-            self.add_city_frame(
+            self.add_city_frame( # Завантажуємо міста із заглушками
                 city, code=None, 
                 date_time="Завантаження...", temp=None, desc="Завантаження...", 
-                tmax=None, tmin=None
+                tmax=None, tmin=None, eng_name=None
                 )     
             
     def load_weather(self, city_name, frame):
-        data = get_weather(city_name)
+        data = get_weather(city_name, forecast_type="current")
         if data:  
             local_date_time = get_local_date_time(timezone=data["timezone"])
             code = data['weather'][0]['icon'] 
@@ -83,16 +78,16 @@ class SideBar(QWidget):
             frame.update_weather(
                 code=validated_code, 
                 date_time=local_date_time, temp=data['main']['temp'], desc=data["weather"][0]["description"], 
-                tmax=data['main']['temp_max'], tmin=data['main']['temp_min']
+                tmax=data['main']['temp_max'], tmin=data['main']['temp_min'], eng_name=data["name"]
                 )
         if self.selected_city == frame:
             self.selected_city.trigger_click()
                 
-    def apply_theme(self, city_frame=None, change_theme=True, theme=None):
+    def apply_theme(self, city_frame=None, theme=None):
         if city_frame:
             self.choose_city_frame(city_frame)
-            return
-        self.set_theme_icon(theme)
+        else:
+            self.set_theme_icon(theme)
 
     def choose_city_frame(self, city_frame):
         if self.selected_city:
