@@ -1,12 +1,14 @@
-from PyQt6.QtWidgets import QMainWindow, QHBoxLayout, QWidget, QApplication
+from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QHBoxLayout, QWidget, QApplication
 from PyQt6.QtCore import Qt, QTimer
 from ..Tools import *
 from .side_bar import SideBar
 from .main_content import MainContent
+from .top_bar import WindowsTopBar
 
 class MainAppWindow(QMainWindow):
     SIDEBAR_WIDTH = 380
     UPDATE_INTERVAL = 60000
+    TOP_BAR_HEIGHT = 30
 
     def __init__(self, width, height, window_name, config_data):
         super().__init__()
@@ -18,14 +20,20 @@ class MainAppWindow(QMainWindow):
         # Основний віджет
         self.central_widget = QWidget()
         self.central_widget.setObjectName("weatherWidget")
-        self.central_widget_layout = QHBoxLayout(self.central_widget)
-        self.central_widget_layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
-        self.central_widget_layout.setContentsMargins(0, 0, 0, 0)
+        self.central_layout = QVBoxLayout(self.central_widget)
+        self.central_layout.setContentsMargins(0, 0, 0, 0)
+        self.central_layout.setSpacing(0)
+        self.top_bar = WindowsTopBar(self, self.TOP_BAR_HEIGHT, "WeatherApp")
+        self.central_layout.addWidget(self.top_bar)
+        self.main_layout = QHBoxLayout()
+        self.main_layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        self.main_layout.setContentsMargins(0, 0, 0, 0)
         # Бокова панель та основний контент
         self.side_bar = SideBar(self.SIDEBAR_WIDTH, self.switch_theme, self.refresh_style, config_data)
         self.main_content = MainContent(width-380, height, config_data, self.add_new_city)
-        self.central_widget_layout.addWidget(self.side_bar)
-        self.central_widget_layout.addWidget(self.main_content)
+        self.main_layout.addWidget(self.side_bar)
+        self.main_layout.addWidget(self.main_content)
+        self.central_layout.addLayout(self.main_layout)
         self.setCentralWidget(self.central_widget)
         # Таймер, який оновлює дані кожну хвилину
         self.weather_timer = QTimer()

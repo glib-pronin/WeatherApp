@@ -4,9 +4,29 @@
     border-radius: 16px;
 }
 
+MainAppWindow[maximized="true"] #welcomeWidget, MainAppWindow[maximized="true"] #sunnyWeather, MainAppWindow[maximized="true"] #nightweather, MainAppWindow[maximized="true"] #fewCloudyDayWeather,
+MainAppWindow[maximized="true"] #fewCloudyNightWeather, MainAppWindow[maximized="true"] #cloudyWeather, MainAppWindow[maximized="true"] #rainyWeather, MainAppWindow[maximized="true"] #thunderstormWeather,
+MainAppWindow[maximized="true"] #snowyWeather{
+    border-radius: 0px;
+}
+
 #sideBar {
-    border-top-left-radius: 16px;
     border-bottom-left-radius: 16px;
+    border: none;
+}
+
+MainAppWindow[maximized="true"] #sideBar {
+    border-radius: 0px;
+}
+
+MainAppWindow[maximized="true"] #topBar {
+    border-radius: 0px;
+
+}
+
+#topBar {
+    border-top-right-radius: 16px;
+    border-top-left-radius: 16px;
 }
 
 #weatherWidget, #welcomeWidget {
@@ -45,10 +65,55 @@
     background: qlineargradient(x1:0, y1:1, x2:1, y2:0, stop:0 #FFFFFF, stop:1 #B0C4DE);
 }
 
-QLabel {
+QLabel, QPushButton {
     color: white;
     font-family: "Segoe UI";
     font-weight: 500;
+}
+
+#redBtn, #yellowBtn, #greenBtn {
+    border-radius: 7px;
+}
+
+#redBtn {
+    background-color: #FF5F57;
+}
+#redBtn::hover {
+    background-color: #E04845;
+}
+
+#yellowBtn {
+    background-color: #FEBC2E;
+}
+
+#yellowBtn::hover {
+    background-color: #E0A700;
+}
+
+#greenBtn {
+    background-color: #28C940;
+}
+
+#greenBtn::hover {
+    background-color: #1DAF38;
+}
+
+#commandBtnClose, #commandBtnMaxBig, #commandBtnMaxSmall, #commandBtnMin {
+    background-color: transparent;   
+    border: none;
+    font-size: 16px;
+}
+
+#commandBtnMaxBig {
+    font-size: 26px;
+}
+
+#commandBtnClose {
+    border-top-right-radius: 16px;
+}
+
+MainAppWindow[maximized="true"] #commandBtnClose {
+    border-radius: 0px;
 }
 
 #welcomeWidget QLabel{
@@ -65,7 +130,7 @@ QLabel {
     background-color: rgba(0, 0, 0, 85);
 }
 
-#position, #weatherTempRange, #todayText, #forecastText, #titleText{
+#position, #weatherTempRange, #todayText, #forecastText, #titleText, #topPanelTitle{
     font-size: 16px;
 }
 
@@ -166,4 +231,3 @@ QLabel {
 #chart {
     background: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0 #87CEFA, stop:1 #FFDF56)
 }
-

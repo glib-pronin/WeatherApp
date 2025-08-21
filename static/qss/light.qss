@@ -2,6 +2,14 @@
     background-color: rgba(255, 255, 255, 153);
 }
 
+#topBar {
+    background-color: rgba(182, 181, 181, 153);
+}
+
+#commandBtnClose::hover, #commandBtnMaxBig::hover, #commandBtnMaxSmall::hover, #commandBtnMin::hover {
+    background-color: rgba(182, 181, 181, 201);
+}
+
 #themeSwitcher {
     background-color:  rgba(0, 0, 0, 51);
     border-radius: 12px;
@@ -10,7 +18,7 @@
     border: none;
 }
 
-QLabel {
+QLabel, QPushButton {
     color: #2C2C2C
 }
 
