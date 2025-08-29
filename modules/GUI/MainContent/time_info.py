@@ -8,12 +8,12 @@ class TimeWidget(QWidget):
     IMAGE_LABEL_SIZE = 168
     DIAL_SIZE = 150
 
-    def __init__(self, height, city_date_time):
+    def __init__(self, height, city_date_time, today_caption, lang):
         super().__init__()
         self.setFixedHeight(height)
         self.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
         self.setObjectName("cityInfo")
-        city_date_time = {} if city_date_time == "Завантаження..." else city_date_time
+        self.city_date_time = {} if city_date_time == "Завантаження..." else city_date_time
         self.time_info_layout = QVBoxLayout(self)
         self.time_info_layout.setSpacing(20)
         self.time_info_layout.setContentsMargins(20, 10, 20, 10)
@@ -22,7 +22,7 @@ class TimeWidget(QWidget):
         self.first_line = QVBoxLayout()
         self.first_line.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.first_line.setSpacing(5)
-        self.today_label = QLabel(text="Сьогодні")
+        self.today_label = QLabel(text=today_caption)
         self.today_label.setObjectName("todayText")
         self.first_line.addWidget(self.today_label)
         self.line = LineFrame()
@@ -30,10 +30,10 @@ class TimeWidget(QWidget):
         self.time_info_layout.addLayout(self.first_line)
 
         self.second_line = QHBoxLayout()
-        self.day_of_week = QLabel(text=city_date_time.get("local_day_of_week"))
+        self.day_of_week = QLabel(text=self.city_date_time.get("local_day_of_week", {}).get(lang))
         self.day_of_week.setObjectName("dateText")
         self.second_line.addWidget(self.day_of_week)
-        self.date = QLabel(text=city_date_time.get("local_date"))
+        self.date = QLabel(text=self.city_date_time.get("local_date"))
         self.date.setObjectName("dateText")
         self.second_line.addWidget(self.date, alignment=Qt.AlignmentFlag.AlignRight)
         self.time_info_layout.addLayout(self.second_line)
@@ -44,7 +44,11 @@ class TimeWidget(QWidget):
         self.img_label.setObjectName("dialImg")
         self.img_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.time_info_layout.addWidget(self.img_label, alignment=Qt.AlignmentFlag.AlignCenter)
-        self.time_label = QLabel(text=city_date_time.get("local_time"), parent=self.img_label)
+        self.time_label = QLabel(text=self.city_date_time.get("local_time"), parent=self.img_label)
         self.time_label.setObjectName("timeText")
         self.time_label.setFixedSize(self.img_label.size())
         self.time_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+    def update_lang(self, today_caption, lang):
+        self.today_label.setText(today_caption)
+        self.day_of_week.setText(self.city_date_time.get("local_day_of_week", {}).get(lang))

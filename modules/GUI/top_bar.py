@@ -35,12 +35,12 @@ class WindowsTopBar(QWidget):
             self.btn_min = QPushButton()
             self.btn_max = QPushButton()
             self.btn_close = QPushButton()
-            for btn in (self.btn_close, self.btn_max, self.btn_min):
+            for btn in (self.btn_close, self.btn_min, self.btn_max):
                 btn.setFixedSize(QSize(14, 14))
                 self.main_layout.addWidget(btn)
             self.btn_close.setObjectName("redBtn")
-            self.btn_min.setObjectName("yellowBtn")
             self.btn_max.setObjectName("greenBtn")
+            self.btn_min.setObjectName("yellowBtn")
             self.main_layout.addStretch()
             self.main_layout.addWidget(self.title)
         # Вішаємо обробники на кнопки

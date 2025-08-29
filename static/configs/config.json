@@ -1,14 +1,27 @@
 {
-    "cities": [
-        "Барселона",
-        "Суйчжоу",
-        "Дніпро",
-        "Сеул",
-        "Рига",
-        "Львів",
-        "Сидней",
-        "Лондон"
-    ],
-    "selected_city_name": "Сидней",
-    "selected_theme": "dark"
+    "cities": {
+        "ua": [
+            "Дніпро",
+            "Барселона",
+            "Брюсель",
+            "Сідней",
+            "Монреаль",
+            "Софія",
+            "Канберра"
+        ],
+        "eng": [
+            "Dnipro",
+            "Barcelona",
+            "Brussels",
+            "Sydney",
+            "Montréal",
+            "Sofia",
+            "Canberra"
+        ]
+    },
+    "selected_city_name": "Дніпро",
+    "selected_theme": "light",
+    "main_window_size": "1200x800",
+    "selected_icons_folder": "icons1",
+    "selected_lang": "ua"
 }

@@ -2,7 +2,7 @@ from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtCore import Qt, QSize
 from ..city_frame import CityFrame
-from ...Tools import get_image_path
+from ...Tools import get_image_path, get_json
 
 class WeatherWidget(QWidget):
     IMAGE_SIZE = 76
@@ -12,6 +12,8 @@ class WeatherWidget(QWidget):
         self.setFixedHeight(height)
         self.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
         self.setObjectName("cityInfo")
+        self.selected_icons_folder = get_json("config.json")["selected_icons_folder"]
+        self.img_code = city_frame.img_code
         self.weather_info_layout = QVBoxLayout(self)
         self.weather_info_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.weather_info_layout.setSpacing(16)
@@ -22,8 +24,9 @@ class WeatherWidget(QWidget):
 
         self.temp_img_layout = QHBoxLayout()
         self.temp_img_layout.setSpacing(8)
+        self.temp_img_layout.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.temp_img = QLabel()
-        self.temp_img.setPixmap(QPixmap(get_image_path(f"icons/{city_frame.img_code}.png")).scaled(self.IMAGE_SIZE, self.IMAGE_SIZE, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
+        self.temp_img.setPixmap(QPixmap(get_image_path(f"{self.selected_icons_folder}/{self.img_code}.png")).scaled(self.IMAGE_SIZE, self.IMAGE_SIZE, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
         self.temp_img.setFixedSize(QSize(self.IMAGE_SIZE, self.IMAGE_SIZE))
         self.temp_value = QLabel(text=city_frame.temp_value.text())
         self.temp_value.setObjectName("tempValue")
@@ -40,3 +43,7 @@ class WeatherWidget(QWidget):
         self.temp_range.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.temp_range.setObjectName("weatherTempRange")
         self.weather_info_layout.addWidget(self.temp_range)
+
+    def update_weather_icon(self, selected_icons_folder):
+        self.selected_icons_folder = selected_icons_folder
+        self.temp_img.setPixmap(QPixmap(get_image_path(f"{self.selected_icons_folder}/{self.img_code}.png")).scaled(self.IMAGE_SIZE, self.IMAGE_SIZE, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))

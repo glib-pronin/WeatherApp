@@ -63,7 +63,7 @@ def make_hourly_data(data):
             hourly_data["y_values"].append(min_value+5*(i+1))
         hourly_data["y_values"].reverse()
         for hour in forecast_day["hour"]:
-            hourly_data["charts_height"].append((round(hour["temp_c"])-abs(min_value))*3)
+            hourly_data["charts_height"].append((round(hour["temp_c"])-min_value)*3)
             code = hour["condition"]["code"]
             converted_code = weather_code_map[str(code)] + 'd' if hour["is_day"] == 1 else weather_code_map[str(code)]+'n'
             hourly_data["icon_codes"].append(converted_code)

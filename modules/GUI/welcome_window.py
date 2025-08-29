@@ -13,14 +13,12 @@ class MainWindow(QMainWindow):
     REFRESH_ICON_SIZE = 44
     WEATHER_IMAGE_SIZE = 76
     POSITION_IMAGE_SIZE = 16
-    MAIN_WINDOW_WIDTH = 1200
-    MAIN_WINDOW_HEIGHT = 800
+    MAIN_WINDOW_WIDTH = int(config_data["main_window_size"].split("x")[0])
+    MAIN_WINDOW_HEIGHT = int(config_data["main_window_size"].split("x")[1])
 
-    def __init__(self, width, height, window_name, config_data):
+    def __init__(self, width, height, config_data):
         super().__init__()
-        self.window_name = window_name
-        self.setWindowTitle(window_name)
-        self.setFixedSize(QSize(width, height))
+        self.setMinimumSize(QSize(width, height))
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, True)
         self.setObjectName("welcomeWidget")
@@ -45,7 +43,7 @@ class MainWindow(QMainWindow):
         # Верхній рядок з іконкою позиції, надписом та кнопкою оновлення
         self.position_img = QLabel()
         self.position_img.setPixmap(QPixmap(get_image_path("images/vector.png")).scaled(self.POSITION_IMAGE_SIZE, self.POSITION_IMAGE_SIZE, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
-        self.position_lbl = QLabel(text="Поточна позиція")
+        self.position_lbl = QLabel(text=get_json("translations.json")[self.config_data["selected_lang"]]["welcome_widget_caption"])
         self.position_lbl.setObjectName("position")
         self.refresh_btn = QPushButton()
         self.refresh_btn.setIcon(QIcon(get_image_path("images/refresh.png")))
@@ -79,38 +77,39 @@ class MainWindow(QMainWindow):
         self.small_layout.addWidget(self.range_lbl)
         self.weather_widget_layout.addLayout(self.small_layout)
         self.setCentralWidget(self.weather_widget)
-        self.get_data(city_name=self.config_data["selected_city_name"]) # Завантаження погоди
+        self.selected_city_name = ""
+        for ind, city in enumerate(self.config_data["cities"]["ua"]):
+            if city == config_data["selected_city_name"]:
+                self.selected_city_name = self.config_data["cities"]["eng"][ind]
+                break
+                
+        self.get_data(city_name=self.selected_city_name) # Завантаження погоди
 
     def get_data(self, city_name: str):
-        data = get_weather(city_name, forecast_type = "current")
+        data = get_weather(city_name, forecast_type = "current", lang=self.config_data["selected_lang"])
         if not data:
             print("Помилка отримання даних з API")   
             self.weather_widget.setObjectName("welcomeWidget")
-            self.desc_lbl.setText("Помилка отримання даних")
+            self.desc_lbl.setText(get_json("translations.json")[self.config_data["selected_lang"]]["api_data_error"])
             return  
-        self.city_lbl.setText(city_name)
+        self.city_lbl.setText(self.config_data["selected_city_name"] if config_data["selected_lang"] == "ua" else city_name)
         self.temp_value.setText(f"{round(data['main']['temp'])}°")
         icon = data['weather'][0]['icon']
         validated_icon = icon if icon != "50n" and icon != "50d" else "04n"
         weather_type = select_weather_type(validated_icon)
         self.weather_widget.setObjectName(weather_type)
-        self.refresh_style(self.weather_widget)
-        self.weather_img.setPixmap(QPixmap(get_image_path(f"icons/{validated_icon}.png")).scaled(
+        refresh_widget(self.weather_widget)
+        self.weather_img.setPixmap(QPixmap(get_image_path(f"{self.config_data['selected_icons_folder']}/{validated_icon}.png")).scaled(
             self.WEATHER_IMAGE_SIZE, self.WEATHER_IMAGE_SIZE, 
             Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation
             ))
         self.desc_lbl.setText(data["weather"][0]["description"].capitalize())
-        self.range_lbl.setText(f"Макс.:{round(data['main']['temp_max'])}°, мін.:{round(data['main']['temp_min'])}°")
-    
-    def refresh_style(self, widget):
-        style = widget.style()
-        style.unpolish(widget)
-        style.polish(widget)
+        self.range_lbl.setText(f"{'Макс.:' if self.config_data['selected_lang'] == 'ua' else 'Max.:'}{round(data['main']['temp_max'])}°, {'мін.:' if self.config_data['selected_lang'] == 'ua' else 'min.:'}{round(data['main']['temp_min'])}°")
     
     def open_main_window(self):
-        self.main_window = MainAppWindow(self.MAIN_WINDOW_WIDTH, self.MAIN_WINDOW_HEIGHT, self.window_name, self.config_data)
+        self.main_window = MainAppWindow(self.MAIN_WINDOW_WIDTH, self.MAIN_WINDOW_HEIGHT, self.config_data, self.weather_widget.objectName())
         self.main_window.show()
         self.close()
 
-main_window = MainWindow(350, 350, "WeatherApp", config_data)
+main_window = MainWindow(350, 350, config_data)
 main_window.show()

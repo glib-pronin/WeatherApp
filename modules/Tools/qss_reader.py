@@ -12,4 +12,5 @@ qss_path = os.path.abspath(__file__+"/../../../static/qss")
 def read_qss_file(filename: str):
     with open(f"{qss_path}/{filename}") as f:
         file = f.read()
-        return file.replace("url_for_replacement", get_image_path("images/grid.png").replace('\\', '/'))
+        modified_file = file.replace("url_for_replacement1", get_image_path("images/grid.png").replace('\\', '/'))
+        return modified_file.replace("url_for_replacement2", get_image_path("images/down-arrow.png").replace('\\', '/'))

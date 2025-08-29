@@ -48,10 +48,16 @@ QLabel, QPushButton {
     background-color: rgba(255, 255, 255, 102);
 }
 
-#cityInfo {
+#cityInfo, #settingsBlock {
     background-color: rgba(255, 255, 255, 51);
 }
 
 #dialImg {
     background-color: rgba(255, 255, 255, 51);
+}
+
+QListView {
+    background-color: white;
+    color: black;
+    selection-background-color: rgba(255, 255, 255, 102);
 }

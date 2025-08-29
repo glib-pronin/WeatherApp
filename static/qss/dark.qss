@@ -48,10 +48,16 @@
     border-color: white;
 }
 
-#cityInfo {
+#cityInfo, #settingsBlock {
     background-color: rgba(0, 0, 0, 51); 
 }
 
 #dialImg {
     background-color: rgba(0, 0, 0, 51);
+}
+
+QListView {
+    background-color: rgb(53, 52, 52);
+    color: white;
+    selection-background-color: rgba(53, 52, 52, 102);
 }

@@ -9,8 +9,9 @@ class CityFrame(QWidget):
         self.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
         self.setObjectName("cityFrame")
         self.img_code = code
+        self.name = name
         self.eng_name = eng_name
-        self.date_time = date_time
+        self.date_time = date_time if isinstance(date_time, dict) else {}
         self.click_filter = ClickFilter(lambda city=self: on_click_callback(city_frame=city, change_theme=False))
         self.installEventFilter(self.click_filter)
         # Усі layouts
@@ -21,7 +22,7 @@ class CityFrame(QWidget):
         # Лівий блок: назва та час міста
         self.city_name = QLabel(text=name)
         self.city_name.setObjectName("text2")
-        self.city_time = QLabel(text=self.date_time["local_time"] if self.date_time != "Завантаження..." else date_time)
+        self.city_time = QLabel(text=self.date_time.get("local_time"))
         self.city_time.setObjectName("text3")
         self.left_block.addWidget(self.city_name)
         self.left_block.addWidget(self.city_time)
@@ -33,7 +34,7 @@ class CityFrame(QWidget):
         # Додаткова інформаці
         self.weather_desc = QLabel(text=self.trim_weather_desc(desc))
         self.weather_desc.setObjectName("text3")
-        self.temp_max_min = QLabel(text=f"Макс.:{round(tmax)}°, мін.:{round(tmin)}°" if tmax is not None or tmin is not None else "—")
+        self.temp_max_min = QLabel(text=f"{tmax}°, {tmin}°" if tmax is not None or tmin is not None else "—")
         self.temp_max_min.setObjectName("text3")
         self.last_row.addWidget(self.weather_desc)
         self.last_row.addWidget(self.temp_max_min, alignment=Qt.AlignmentFlag.AlignRight)
@@ -48,14 +49,16 @@ class CityFrame(QWidget):
     def trigger_click(self):
         self.click_filter.callback()
 
-    def update_weather(self, code, date_time, temp, desc, tmax, tmin, eng_name):
+    def update_weather(self, code, date_time, temp, desc, tmax, tmin):
         self.img_code = code
-        self.date_time = date_time
-        self.city_time.setText(self.date_time["local_time"])
-        self.temp_value.setText(f"{round(temp)}°")
+        self.date_time = date_time if isinstance(date_time, dict) else {}
+        self.city_time.setText(self.date_time.get("local_time"))
+        self.temp_value.setText(f"{round(temp)}°" if temp is not None else "-°")
         self.weather_desc.setText(self.trim_weather_desc(desc))
-        self.temp_max_min.setText(f"Макс.:{round(tmax)}°, мін.:{round(tmin)}°")
-        self.eng_name = eng_name
+        self.temp_max_min.setText(f"{tmax}°, {tmin}°" if tmax is not None or tmin is not None else "—")
+
+    def change_city_name(self, city_name):
+        self.city_name.setText(city_name)
 
 class LineFrame(QFrame):
     def __init__(self):

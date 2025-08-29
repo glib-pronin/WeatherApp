@@ -7,8 +7,9 @@ from ...Tools import get_weather, make_hourly_data, get_image_path, get_json
 class HourlyWidget(QWidget):
     ICON_SIZE = 15
     CHART_WIDTH = 20
+    GRAPH_CONTAINER_HEIGHT = 110
 
-    def __init__(self, height, city_eng_name):
+    def __init__(self, height, city_eng_name, hourly_info_caption):
         super().__init__()
         self.setFixedHeight(height)
         self.setObjectName("cityInfo")
@@ -22,7 +23,7 @@ class HourlyWidget(QWidget):
         self.first_line = QVBoxLayout()
         self.first_line.setSpacing(5)
         self.first_line.setAlignment(Qt.AlignmentFlag.AlignTop)
-        self.title_label = QLabel(text="Прогноз на сьогодняшній день")
+        self.title_label = QLabel(text=hourly_info_caption)
         self.title_label.setObjectName("titleText")
         self.first_line.addWidget(self.title_label)
         self.line = LineFrame()
@@ -31,7 +32,7 @@ class HourlyWidget(QWidget):
         # основна частина з графіком
         self.second_line = QHBoxLayout()
         self.graph_container = QWidget()
-        self.graph_container.setFixedHeight(110)
+        self.graph_container.setFixedHeight(self.GRAPH_CONTAINER_HEIGHT)
         self.graph_container.setMinimumWidth(600)
         self.graph_container.setObjectName("graphContainer")
         self.second_line.addWidget(self.graph_container)
@@ -75,7 +76,7 @@ class HourlyWidget(QWidget):
 
     def resizeEvent(self, a0):
         width = self.graph_container.width()
-        chart_spacing = round((width-24*self.CHART_WIDTH)/23)
+        chart_spacing = round((width-24*self.CHART_WIDTH)//23)
         icon_spacing = (width-24*self.ICON_SIZE)//23
         self.graph_container_layout.setSpacing(chart_spacing)
         self.icons_layout.setSpacing(icon_spacing)

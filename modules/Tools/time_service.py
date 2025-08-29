@@ -15,7 +15,10 @@ def get_local_date_time(timezone: int):
     local_time = datetime.utcnow() + timedelta(seconds=timezone)
     return {
         "local_time": local_time.strftime("%H:%M"),
-        "local_day_of_week": translated_date_of_week[local_time.strftime("%A")],
+        "local_day_of_week": {
+            "eng": local_time.strftime("%A"),
+            "ua": translated_date_of_week[local_time.strftime("%A")]
+        },
         "local_date": local_time.strftime("%d.%m.%Y")
         }
 

@@ -11,7 +11,7 @@ class ForecastWidget(QWidget):
     BLOCK_WIDTH = 55
     BLOCK_HEIGHT = 100
 
-    def __init__(self, height, city_name, city_desc):
+    def __init__(self, height, city_frame):
         super().__init__()
         self.setFixedHeight(height)
         self.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
@@ -19,6 +19,7 @@ class ForecastWidget(QWidget):
         self.click_filter_for_prev = ClickFilter(self.switch_prev)
         self.click_filter_for_next = ClickFilter(self.switch_next)
         self.theme = get_json("config.json")["selected_theme"]
+        self.city_frame = city_frame
         self.main_layout = QVBoxLayout(self)
         self.main_layout.setContentsMargins(20, 10, 20, 10)
         self.main_layout.setSpacing(10)
@@ -26,7 +27,7 @@ class ForecastWidget(QWidget):
         self.first_line = QVBoxLayout()
         self.first_line.setSpacing(5)
         self.first_line.setAlignment(Qt.AlignmentFlag.AlignTop)
-        self.desc_label = QLabel(text=city_desc.capitalize())
+        self.desc_label = QLabel(text=self.city_frame.weather_desc.text().capitalize())
         self.desc_label.setObjectName("forecastText")
         self.first_line.addWidget(self.desc_label)
         self.line = LineFrame()
@@ -37,7 +38,7 @@ class ForecastWidget(QWidget):
         self.second_line.setSpacing(24)
         self.second_line.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.forecast_data = {"current_page": 0, "forecasts": []}
-        weather_data = get_weather(city_name=city_name, forecast_type="forecast")
+        weather_data = get_weather(city_name=self.city_frame.eng_name, forecast_type="forecast")
         if weather_data:
             for forecast in weather_data["list"]:
                 data = {
@@ -62,7 +63,8 @@ class ForecastWidget(QWidget):
 
     def resizeEvent(self, a0):
         spacing = (self.width()-self.ARROW_BTN_SIZE*2-len(self.forecast_blocks)*self.BLOCK_WIDTH)//(1+len(self.forecast_blocks))
-        self.second_line.setSpacing(spacing)
+        if spacing != self.second_line.spacing():
+            self.second_line.setSpacing(spacing)
         return super().resizeEvent(a0)
 
     def activate_prev_btn(self, current_page):
@@ -129,3 +131,7 @@ class ForecastWidget(QWidget):
         print(start_ind, end_ind)
         for forecast, forecast_block in zip(self.forecast_data["forecasts"][start_ind:end_ind], self.forecast_blocks):
             forecast_block.update_block(forecast["time"], forecast["icon"], forecast["temp"], theme=self.theme)
+
+    def update_desc_lbl(self):
+        self.desc_label.setText(self.city_frame.weather_desc.text().capitalize())
+

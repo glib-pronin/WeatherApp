@@ -116,9 +116,15 @@ MainAppWindow[maximized="true"] #commandBtnClose {
     border-radius: 0px;
 }
 
-#welcomeWidget QLabel{
+#welcomeWidget QLabel, #settingsModal QLabel, #settingsModal QRadioButton{
     color: white;
 }
+
+#settingsModal{
+    background-color: rgba(54, 54, 54, 255);
+    border-radius: 10px;
+}  
+
 
 #refreshBtn {
     border-radius: 6px;
@@ -130,8 +136,21 @@ MainAppWindow[maximized="true"] #commandBtnClose {
     background-color: rgba(0, 0, 0, 85);
 }
 
-#position, #weatherTempRange, #todayText, #forecastText, #titleText, #topPanelTitle{
+#position, #weatherTempRange, #todayText, #forecastText, #titleText, #topPanelTitle, #sectionLabel, #selectedSectionLabel{
     font-size: 16px;
+}
+
+#settingsModal #sectionLabel {
+    color: rgba(255, 255, 255, 51)
+}
+
+#settingsMainContent{
+    border-left: 1px solid rgba(255, 255, 255, 51);
+}
+
+#selectedSectionLabel, #selectedIconListCard {
+    background-color: rgba(0, 0, 0, 51);
+    border-radius: 4px;
 }
 
 #city, #text1{
@@ -144,7 +163,7 @@ MainAppWindow[maximized="true"] #commandBtnClose {
     font-weight: 700;
 }
 
-#description, #dateText{
+#description, #dateText, #settingsTitle{
     font-size: 24px;
 }
 
@@ -153,7 +172,7 @@ MainAppWindow[maximized="true"] #commandBtnClose {
     color: rgba(255, 255, 255, 150);
 }
 
-#scrollArea, #scrollContent, #cityFrame {
+#scrollArea, #scrollContent, #cityFrame, #settingsScrollContent {
     background-color: transparent;
     border: none;
 }
@@ -207,8 +226,12 @@ MainAppWindow[maximized="true"] #commandBtnClose {
     border-radius: 10px;
 }
 
+#settingsBlock {
+    border-radius: 4px;
+}
+
 #searchingError{
-    font-size: 18px;
+    font-size: 16px;
     font-weight: bold;
 }
 
@@ -221,7 +244,7 @@ MainAppWindow[maximized="true"] #commandBtnClose {
 }
 
 #graphContainer {
-    border-image: url("url_for_replacement") 0 0 0 0 stretch stretch;
+    border-image: url("url_for_replacement1") 0 0 0 0 stretch stretch;
 }
 
 #yAxiousValue {
@@ -230,4 +253,87 @@ MainAppWindow[maximized="true"] #commandBtnClose {
 
 #chart {
     background: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0 #87CEFA, stop:1 #FFDF56)
+}
+
+#settingsText, #settingsModal QRadioButton, #settingsSectionContentCaption, #cityLine, #messageLabel {
+    font-size: 14px;
+}
+
+#settingsModal QRadioButton::indicator {
+    width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    border: 1px solid white;
+    background: transparent;
+}
+
+#settingsModal QRadioButton::indicator:checked {
+background: qradialgradient(cx:0.5, cy:0.5, radius:0.5,
+                                fx:0.5, fy:0.5,
+                                stop:0.6 white, stop:0.7 transparent);
+}
+
+#settingsModal QLineEdit{
+    background-color: white;
+    border-radius: 4px;
+    padding-left: 10px;
+    font-size: 12px;
+}
+
+#settingsModal QComboBox  {
+    padding-left: 10px;
+    background-color: white;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+#settingsModal QComboBox::drop-down {
+    width: 16px;
+    height: 16px;
+    subcontrol-position: center right;
+    border: none;
+}
+
+#settingsModal QComboBox::down-arrow {
+    image: url("url_for_replacement2");
+    width: 16px;
+    height: 16px; 
+    margin-right: 10px;
+}
+
+#settingsModal QScrollArea{
+    background-color: rgba(0, 0, 0, 51);
+    border-radius: 8px;
+}
+
+#activeSaveButton {
+    border-radius: 4px;
+    background-color: black;
+    color: white;
+    font-size: 14px;
+}
+
+#disableSaveButton {
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 51);
+    color: rgba(255, 255, 255, 51);
+    font-size: 14px;
+}
+
+#settingsSectionContentTitle {
+    font-size: 18px;
+}
+
+#settingsIconLabel {
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 51);
+}
+
+QListView {
+    font-size: 14px;
+    padding: 5px;
+}
+
+QListView::item {
+    padding: 5px;
 }

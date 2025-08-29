@@ -7,3 +7,4 @@ from .time_service import *
 from .weather_fetcher import *
 from .weather_selector import * 
 from .hourly_data_maker import *
+from .widget_refresher import *
