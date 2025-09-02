@@ -1,11 +1,12 @@
 from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout
 from PyQt6.QtGui import QPixmap
-from PyQt6.QtCore import Qt, QSize
+from PyQt6.QtCore import Qt, QSize, QTimer
 from ..city_frame import CityFrame
 from ...Tools import get_image_path, get_json
 
 class WeatherWidget(QWidget):
-    IMAGE_SIZE = 76
+    IMAGE_SIZE_SUB = 76
+    IMAGE_SIZE = 280
 
     def __init__(self, height, city_frame: CityFrame):
         super().__init__()
@@ -25,13 +26,16 @@ class WeatherWidget(QWidget):
         self.temp_img_layout = QHBoxLayout()
         self.temp_img_layout.setSpacing(8)
         self.temp_img_layout.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        self.temp_img = QLabel()
+        self.temp_img = QLabel(parent=self)
         self.temp_img.setPixmap(QPixmap(get_image_path(f"{self.selected_icons_folder}/{self.img_code}.png")).scaled(self.IMAGE_SIZE, self.IMAGE_SIZE, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
         self.temp_img.setFixedSize(QSize(self.IMAGE_SIZE, self.IMAGE_SIZE))
         self.temp_value = QLabel(text=city_frame.temp_value.text())
+
         self.temp_value.setObjectName("tempValue")
         self.temp_value.setFixedWidth(self.temp_value.sizeHint().width())
-        self.temp_img_layout.addWidget(self.temp_img)
+        self.temp_img_sub = QLabel()
+        self.temp_img_sub.setFixedSize(QSize(self.IMAGE_SIZE_SUB, self.IMAGE_SIZE_SUB))
+        self.temp_img_layout.addWidget(self.temp_img_sub)
         self.temp_img_layout.addWidget(self.temp_value)
         self.weather_info_layout.addLayout(self.temp_img_layout)
 
@@ -47,3 +51,11 @@ class WeatherWidget(QWidget):
     def update_weather_icon(self, selected_icons_folder):
         self.selected_icons_folder = selected_icons_folder
         self.temp_img.setPixmap(QPixmap(get_image_path(f"{self.selected_icons_folder}/{self.img_code}.png")).scaled(self.IMAGE_SIZE, self.IMAGE_SIZE, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
+
+    def resizeEvent(self, a0):
+        super().resizeEvent(a0)
+        self.update_icon_pos()
+
+    def update_icon_pos(self):
+        rect = self.temp_img_sub.pos()
+        self.temp_img.move(rect.x()-100, rect.y()-97)

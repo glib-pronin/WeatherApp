@@ -87,22 +87,6 @@ class MainContent(QWidget):
         self.grouped_cities = get_json("grouped_cities.json")
         self.prefix = ""
         self.completer = QCompleter()
-        # popup = self.completer.popup()
-        # popup.setObjectName("popup") 
-        # .setStyleSheet("""
-        #     QListView {
-        #         background-color: #1e1e1e;
-        #         color: #f0f0f0;
-        #         border: 1px solid #555;
-        #         selection-background-color: #0078d7;
-        #         selection-color: white;
-        #         font-size: 14px;
-        #         padding: 4px;
-        #     }
-        #     QListView::item {
-        #         padding: 15px;
-        #     }
-        # """)
         self.search_input.setCompleter(self.completer)
         # Основні панелі: місто, час, прогноз на 5 днів
         self.panels_layout = QVBoxLayout()
@@ -143,9 +127,9 @@ class MainContent(QWidget):
         input_text = self.search_input.text().strip()
         self.adding_frame.setVisible(bool(input_text))
         self.normalize_adding_frame()
-        if len(input_text) >= 3 and input_text[:3] != self.prefix: # Якщо юзер ввів мінімум 3 символи і вони нові
-            self.prefix = input_text[:3] # Отримуємо префікс
-            city_list = self.grouped_cities[self.lang].get(input_text[:3]) 
+        if len(input_text) >= 2 and input_text[:2] != self.prefix: # Якщо юзер ввів мінімум 3 символи і вони 
+            self.prefix = input_text[:2] # Отримуємо префікс
+            city_list = self.grouped_cities[self.lang].get(self.prefix)
             self.completer.setModel(QStringListModel(city_list)) # Завантажуємо нові міста для completer
         
     def handle_search_result(self, success: bool, error_key: str = None):

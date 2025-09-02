@@ -77,9 +77,8 @@ class SideBar(QWidget):
         if data:  
             local_date_time = get_local_date_time(timezone=data["timezone"])
             code = data['weather'][0]['icon'] 
-            validated_code = code if code != "50n" and code != "50d" else "04n"
             frame.update_weather(
-                code=validated_code, 
+                code=code, 
                 date_time=local_date_time, temp=data['main']['temp'], desc=data["weather"][0]["description"], 
                 tmax=f"{self.lang_dict[self.lang]['max_text']}{round(data['main']['temp_max'])}", 
                 tmin=f"{self.lang_dict[self.lang]['min_text']}{round(data['main']['temp_min'])}"

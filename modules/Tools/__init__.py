@@ -8,3 +8,4 @@ from .weather_fetcher import *
 from .weather_selector import * 
 from .hourly_data_maker import *
 from .widget_refresher import *
+from .map_info_fetcher import *

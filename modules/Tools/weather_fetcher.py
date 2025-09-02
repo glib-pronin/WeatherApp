@@ -21,7 +21,6 @@ def get_weather(city_name: str, forecast_type: str, lang: str = "ua"):
     else:
         print(f"{red}Error, incorrect forecast type")
         return None
-    print(url)
     response = requests.get(url=url)
     if response.status_code==200:
         return response.json() 

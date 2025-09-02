@@ -67,6 +67,8 @@ class SettingsModal(QDialog):
 
     def change_main_content_widget(self, widget_cls):
         new_main_content = widget_cls(self.MAIN_CONTENT_HEIGHT, self.lang, self.lang_dict) # Зміна основного контенту
+        if isinstance(self.main_content, CitySearchWidget):
+            self.main_content.cleanup_loader()
         self.main_content_layout.removeWidget(self.main_content)
         self.main_content.deleteLater() # Видаляємо старий віджет
         self.main_content_layout.addWidget(new_main_content)

@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QLabel, QVBoxLayout, QWidget, QRadioButton, QButtonGroup
 from PyQt6.QtCore import Qt, pyqtSignal
-from .save_button import SaveButton
+from .settings_button import SettingsButton
 from ...Tools import get_json
 
 class AppSizeWidget(QWidget):
@@ -34,7 +34,7 @@ class AppSizeWidget(QWidget):
             if size_rdb.text() == self.main_window_size:
                 size_rdb.setChecked(True)
         self.main_layout.addLayout(self.rdb_layout)
-        self.save_btn = SaveButton(self.main_layout)
+        self.save_btn = SettingsButton(self.main_layout, 105, 38)
         self.save_btn.setText(lang_dict[lang]["save_btn_caption"])
         self.save_btn.clicked.connect(self.save_handler)
         self.rdb_group.buttonClicked.connect(self.save_btn.enable_btn)

@@ -7,7 +7,7 @@ from ...Tools import get_image_path, get_json, refresh_widget
 class IconsListCard(QWidget):
     CARD_WIDTH = 490
     CARD_HEIGHT = 136
-    ICON_SIZE = 60
+    ICON_SIZE = 230
     ICON_LABEL_SIZE = 74
 
     def __init__(self, parent, folder, index, icons_list_cards, click_callback):
@@ -39,12 +39,14 @@ class IconsListCard(QWidget):
             container_layout = QHBoxLayout(container)
             container.setFixedSize(QSize(self.ICON_LABEL_SIZE, self.ICON_LABEL_SIZE))
             container.setObjectName("settingsIconLabel")
-            lbl = QLabel()
+            lbl = QLabel(parent=container)
             lbl.setPixmap(QPixmap(get_image_path(f"{folder}/{icon}.png")).scaled(
                 self.ICON_SIZE, self.ICON_SIZE, 
                 Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation
                 ))
-            container_layout.addWidget(lbl)
+            lbl.setFixedSize(QSize(self.ICON_SIZE, self.ICON_SIZE))
+            # container_layout.addWidget(lbl)
+            lbl.move(-77, -77)
             self.icons_layout.addWidget(container)
     
     def click_handler(self):

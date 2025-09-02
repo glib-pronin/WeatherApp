@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QLabel, QVBoxLayout, QWidget, QComboBox
 from PyQt6.QtCore import Qt, pyqtSignal, QSize
-from .save_button import SaveButton
+from .settings_button import SettingsButton
 
 class AppLangWidget(QWidget):
     COMBO_WIDTH = 239
@@ -38,7 +38,7 @@ class AppLangWidget(QWidget):
         self.combo_layout.addWidget(self.combo_box)
         self.main_layout.addLayout(self.combo_layout)
         # Кнопка збереження
-        self.save_btn = SaveButton(self.main_layout)
+        self.save_btn = SettingsButton(self.main_layout, 105, 38)
         self.save_btn.clicked.connect(self.save_handler)
         self.combo_box.currentIndexChanged.connect(self.save_btn.enable_btn)
         self.change_lang(self.lang)

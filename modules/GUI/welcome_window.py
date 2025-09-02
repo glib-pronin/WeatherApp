@@ -12,6 +12,7 @@ app.setStyleSheet(read_qss_file("main.qss") + "\n" + read_qss_file(f"{config_dat
 class MainWindow(QMainWindow):
     REFRESH_ICON_SIZE = 44
     WEATHER_IMAGE_SIZE = 76
+    WEATHER_IMAGE_SIZE_ICON = 280 
     POSITION_IMAGE_SIZE = 16
     MAIN_WINDOW_WIDTH = int(config_data["main_window_size"].split("x")[0])
     MAIN_WINDOW_HEIGHT = int(config_data["main_window_size"].split("x")[1])
@@ -55,7 +56,11 @@ class MainWindow(QMainWindow):
         self.city_lbl = QLabel(text="-")
         self.city_lbl.setObjectName("city")
         # Рядок з іконкою погоди та температурою
-        self.weather_img = QLabel()
+        self.weather_img = QLabel(parent=self.weather_widget)
+        self.weather_img.setFixedSize(QSize(self.WEATHER_IMAGE_SIZE_ICON, self.WEATHER_IMAGE_SIZE_ICON))
+        self.weather_img.move(-82, 45)
+        self.weather_img_stub = QLabel()
+        self.weather_img_stub.setFixedSize(QSize(self.WEATHER_IMAGE_SIZE, self.WEATHER_IMAGE_SIZE))
         self.temp_value = QLabel(text="-°")
         self.temp_value.setObjectName("tempValue")
         # Опис погоди та мін/макс значення температури
@@ -70,7 +75,7 @@ class MainWindow(QMainWindow):
         self.position_layout.addWidget(self.refresh_btn)
         self.weather_widget_layout.addLayout(self.position_layout)
         self.weather_widget_layout.addWidget(self.city_lbl)
-        self.temp_layout.addWidget(self.weather_img)
+        self.temp_layout.addWidget(self.weather_img_stub)
         self.temp_layout.addWidget(self.temp_value)
         self.weather_widget_layout.addLayout(self.temp_layout)
         self.small_layout.addWidget(self.desc_lbl)
@@ -95,12 +100,11 @@ class MainWindow(QMainWindow):
         self.city_lbl.setText(self.config_data["selected_city_name"] if config_data["selected_lang"] == "ua" else city_name)
         self.temp_value.setText(f"{round(data['main']['temp'])}°")
         icon = data['weather'][0]['icon']
-        validated_icon = icon if icon != "50n" and icon != "50d" else "04n"
-        weather_type = select_weather_type(validated_icon)
+        weather_type = select_weather_type(icon)
         self.weather_widget.setObjectName(weather_type)
         refresh_widget(self.weather_widget)
-        self.weather_img.setPixmap(QPixmap(get_image_path(f"{self.config_data['selected_icons_folder']}/{validated_icon}.png")).scaled(
-            self.WEATHER_IMAGE_SIZE, self.WEATHER_IMAGE_SIZE, 
+        self.weather_img.setPixmap(QPixmap(get_image_path(f"{self.config_data['selected_icons_folder']}/{icon}.png")).scaled(
+            self.WEATHER_IMAGE_SIZE_ICON, self.WEATHER_IMAGE_SIZE_ICON, 
             Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation
             ))
         self.desc_lbl.setText(data["weather"][0]["description"].capitalize())

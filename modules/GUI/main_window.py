@@ -107,9 +107,8 @@ class MainAppWindow(QMainWindow):
             return
         self.main_content.handle_search_result(True)
         code = data['weather'][0]['icon']
-        validated_code = code if code != "50n" and code != "50d" else "04n"
         self.side_bar.add_city_frame(
-            name=translated_city_name[0], code=validated_code, 
+            name=translated_city_name[0], code=code, 
             date_time=get_local_date_time(timezone=data["timezone"]), 
             temp=data['main']['temp'], desc=data["weather"][0]["description"], 
             tmax=f"{self.lang_dict[self.lang]['max_text']}{round(data['main']['temp_max'])}", 

@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QLabel, QVBoxLayout, QWidget
 from PyQt6.QtCore import Qt, pyqtSignal
-from .save_button import SaveButton
+from .settings_button import SettingsButton
 from .icons_list_card import IconsListCard
 
 class IconsListWidget(QWidget):
@@ -24,7 +24,7 @@ class IconsListWidget(QWidget):
         self.icons_list_layout.setSpacing(0)
         self.main_layout.addLayout(self.icons_list_layout)
         # Кнопка збереження
-        self.save_btn = SaveButton(self.main_layout)
+        self.save_btn = SettingsButton(self.main_layout, 105, 38)
         self.save_btn.clicked.connect(self.save_handler)
         self.save_btn.setText(lang_dict[lang]["save_btn_caption"])
         # Сптсок картинок

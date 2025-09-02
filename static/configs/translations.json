@@ -23,9 +23,13 @@
         "coords_combo_caption": "Coordinates",
         "added_cities_title": "Added cities",
         "api_data_error": "Error retrieving data from API",
-        "downloading_message": "Downloading...",
+        "downloading_message": "Loading...",
         "max_text": "Max.:",
-        "min_text": "min.:"
+        "min_text": "min.:",
+        "map_loading": "Map is loading...",
+        "coords_placeholder": "Longitude, latitude",
+        "map_button_text": "Find",
+        "wrong_coord_msg": "Invalid coordinates"
     },
     "ua": {
         "welcome_widget_caption": "Поточна позиція",
@@ -53,6 +57,10 @@
         "api_data_error": "Помилка отримання даних з API",
         "downloading_message": "Завантаження...",
         "max_text": "Макс.:",
-        "min_text": "мін.:"
+        "min_text": "мін.:",
+        "map_loading": "Мапа завантажується...",
+        "coords_placeholder": "Довгота, широта",
+        "map_button_text": "Шукати",
+        "wrong_coord_msg": "Неправильні координати"
     }
 }
