@@ -87,6 +87,7 @@ class MainContent(QWidget):
         self.grouped_cities = get_json("grouped_cities.json")
         self.prefix = ""
         self.completer = QCompleter()
+        self.completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
         self.search_input.setCompleter(self.completer)
         # Основні панелі: місто, час, прогноз на 5 днів
         self.panels_layout = QVBoxLayout()
@@ -127,8 +128,8 @@ class MainContent(QWidget):
         input_text = self.search_input.text().strip()
         self.adding_frame.setVisible(bool(input_text))
         self.normalize_adding_frame()
-        if len(input_text) >= 2 and input_text[:2] != self.prefix: # Якщо юзер ввів мінімум 3 символи і вони 
-            self.prefix = input_text[:2] # Отримуємо префікс
+        if len(input_text) >= 2 and input_text[:2].capitalize() != self.prefix: # Якщо юзер ввів мінімум 3 символи і вони 
+            self.prefix = input_text[:2].capitalize() # Отримуємо префікс
             city_list = self.grouped_cities[self.lang].get(self.prefix)
             self.completer.setModel(QStringListModel(city_list)) # Завантажуємо нові міста для completer
         
