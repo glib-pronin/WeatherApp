@@ -2,6 +2,7 @@ from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit
 from PyQt6.QtCore import QSize, Qt, pyqtSignal, QStringListModel
 from PyQt6.QtGui import QPixmap
 from ..Tools import get_image_path, refresh_widget, get_json
+from ..DB import get_city_for_completer
 from .click_filter import ClickFilter
 from .Settings import SettingsModal
 from .MainContent import WeatherWidget, TimeWidget, ForecastWidget, HourlyWidget
@@ -84,7 +85,7 @@ class MainContent(QWidget):
         self.top_panel.setAlignment(Qt.AlignmentFlag.AlignRight)
         self.main_layout.addLayout(self.top_panel)
         # QCompleter
-        self.grouped_cities = get_json("grouped_cities.json")
+        # self.grouped_cities = get_json("grouped_cities.json") 
         self.prefix = ""
         self.completer = QCompleter()
         self.completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
@@ -130,7 +131,8 @@ class MainContent(QWidget):
         self.normalize_adding_frame()
         if len(input_text) >= 2 and input_text[:2].capitalize() != self.prefix: # Якщо юзер ввів мінімум 3 символи і вони 
             self.prefix = input_text[:2].capitalize() # Отримуємо префікс
-            city_list = self.grouped_cities[self.lang].get(self.prefix)
+            # city_list = self.grouped_cities[self.lang].get(self.prefix)
+            city_list = get_city_for_completer(self.lang, self.prefix)
             self.completer.setModel(QStringListModel(city_list)) # Завантажуємо нові міста для completer
         
     def handle_search_result(self, success: bool, error_key: str = None):

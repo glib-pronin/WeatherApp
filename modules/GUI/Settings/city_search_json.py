@@ -3,7 +3,6 @@ from PyQt6.QtCore import Qt, pyqtSignal, QSize
 from .settings_button import SettingsButton
 from .city_line import CityLine
 from ...Tools import *
-from ...DB import *
 
 class CitySearchWidget(QWidget):
     COMBO_WIDTH = 239
@@ -25,6 +24,7 @@ class CitySearchWidget(QWidget):
         self.mode = None
         self.lang = lang
         self.lang_dict = lang_dict
+        self.countries = get_json("countries_cities.json")
         self.cities_list = get_json("config.json")["cities"]
         self.main_layout = QVBoxLayout(self)
         self.main_layout.setSpacing(24)
@@ -160,12 +160,10 @@ class CitySearchWidget(QWidget):
             print("city_combo")
             self.save_btn.disable_btn()
             self.map_container.clear()
-            if self.lang == "ua":
-                data = get_eng_city_country(self.country_combo.currentData(), self.city_combo.currentText())
-            country = self.country_combo.currentText() if self.lang == "eng" else data[0]
-            city = self.city_combo.currentText()  if self.lang == "eng" else data[1]
+            country = self.get_country_by_code(self.country_combo.currentData()) 
+            city = country["cities"]["eng"][self.city_combo.currentIndex()] 
             print(city)
-            coords = get_coords_by_city(city_name=city, country_name=country)
+            coords = get_coords_by_city(city_name=city, country_name=country["name"]["eng"])
             if coords:
                 print(coords)
                 self.map_container.setText(self.lang_dict[self.lang]["map_loading"])
@@ -210,9 +208,10 @@ class CitySearchWidget(QWidget):
 
     def get_city_names(self):
         if self.mode == "combo" and self.city_combo.currentIndex() > -1:
-            names = get_city_eng_ua_names(self.city_combo.currentText())
-            city = names[0] # Нзава англійською
-            city_ua = names[1] # Українською
+            country = self.get_country_by_code(self.country_combo.currentData()) # Обрана країна
+            current_index = self.city_combo.currentIndex() # Поточний індекс обраного міста в списку
+            city = country["cities"]["eng"][current_index] # Нзава англійською
+            city_ua = country["cities"]["ua"][current_index] # Українською
         elif self.mode == "input":
             coords = prepare_coords(self.coord_input.text())
             city = get_city_name_by_coords(coords[0], coords[1])
@@ -237,16 +236,16 @@ class CitySearchWidget(QWidget):
         combo.lineEdit().setPlaceholderText(placeholder)
     
     def load_countries(self):
-        countries = get_countries(self.lang)
-        for id, name in countries.items():
-            self.country_combo.addItem(name, id)
+        for country in self.countries:
+            self.country_combo.addItem(country["name"][self.lang], country["code"])
     
-    def load_cities(self, country_id):
+    def load_cities(self, current_code):
         self.mode = "combo"
         self.city_combo.blockSignals(True)
         self.city_combo.clear()
-        if country_id:
-            self.city_combo.addItems(get_cities_by_country_id(self.lang, country_id))
+        if current_code:
+            country = self.get_country_by_code(current_code)
+            self.city_combo.addItems(country["cities"][self.lang])
             self.city_combo.setCurrentIndex(-1)
             self.save_btn.disable_btn()
             self.map_button.disable_btn()
@@ -254,6 +253,11 @@ class CitySearchWidget(QWidget):
             self.map_container.clear()
             self.cleanup_loader()
         self.city_combo.blockSignals(False)
+            
+    def get_country_by_code(self, code):
+        for country in self.countries:
+                if country["code"] == code:
+                    return country
 
     def delete_city(self, index):
         self.city_line_list[index].delete_city_line(self.city_line_list)
