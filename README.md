@@ -44,11 +44,11 @@
 
   - **Приклад запиту для поточної погоди:**
     ``` http
-    GET https://api.openweathermap.org/data/2.5/weather?q=Brussels&appid=YOUR_KEY&units=metric&lang=ua
+    GET https://api.openweathermap.org/data/2.5/weather?q=CITY_NAME&appid=YOUR_KEY&units=metric&lang=ua
     ```
   - **Приклад запиту для прогнозу на 5 днів:**
     ``` http
-    GET https://api.openweathermap.org/data/2.5/forecast?q=Brussels&appid=YOUR_KEY&units=metric
+    GET https://api.openweathermap.org/data/2.5/forecast?q=CITY_NAME&appid=YOUR_KEY&units=metric
     ```
   - **Використовується для:**
     - Поточна температура.
@@ -59,11 +59,11 @@
 ### 2. 🌤️ WeatherAPI
   - **Роль:** Отримання почасового прогнозу на поточний день.
 
-  - **Документація:** [https://openweathermap.org/api](https://www.weatherapi.com/)
+  - **Документація:** https://www.weatherapi.com/
 
   - Приклад запиту:
     ``` http
-    GET GET http://api.weatherapi.com/v1/forecast.json?key=YOUR_KEY&q=Brussels&days=1&aqi=no&alerts=no
+    GET http://api.weatherapi.com/v1/forecast.json?key=YOUR_KEY&q=CITY_NAME&days=1&aqi=no&alerts=no
     ```
   - **Використовується для:**
     - Почасовий прогноз.
@@ -74,10 +74,24 @@
 
   - **Документація:** https://www.geoapify.com/
 
+   - **Приклад запиту для отримання координат за місто та країною:**
+    ``` http
+    GET https://api.geoapify.com/v1/geocode/search?text=CITY_NAME, COUNTRY_NAME&format=json&apiKey=YOUR_KEY
+    ```
+  - **Приклад запиту для отримання карти:**
+    ``` http
+    GET https://api.geoapify.com/v1/geocode/reverse?lat=LAT&lon=LON&format=json&apiKey=YOUR_KEY
+    ```
+
+### 4. 🌍 GeoNames API
+  - **Роль:** Переклад назв міст для підтримки української та англійської локалізації.
+
+  - **Документація:** https://www.geonames.org/export/web-services.html
+
   - Приклад запиту:
     ``` http
-    GET GET http://api.weatherapi.com/v1/forecast.json?key=YOUR_KEY&q=Brussels&days=1&aqi=no&alerts=no
+    GET http://api.geonames.org/searchJSON?q=CITY_NAME&lang=uk&maxRows=1&username=USER_NAME
     ```
   - **Використовується для:**
-    - Почасовий прогноз.
-    - Додаткові погодні показники для побудови графіка.
+    - Переклад назв міст.
+    - Пошук міст українською та англійською.
