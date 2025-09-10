@@ -37,7 +37,7 @@
 
 ---
 ## 🔗 Використані API
-1. **🌤️ OpenWeatherMap API**
+### 1. **🌤️ OpenWeatherMap API**
   - **Роль:** Отримання поточної погоди та прогнозу на 5 днів.
 
   - **Документація:** https://openweathermap.org/api
