@@ -63,7 +63,7 @@
 
   - Приклад запиту:
     ``` http
-    
+    GET http://api.weatherapi.com/v1/forecast.json?key=YOUR_KEY&q=CITY_NAME&days=1&aqi=no&alerts=no
     ```
   - **Використовується для:**
     - Почасовий прогноз.
@@ -76,7 +76,7 @@
 
    - **Приклад запиту для отримання координат за місто та країною:**
     ``` http
-    GET https://api.geoapify.com/v1/geocode/search?text=CITY_NAME+COUNTRY_NAME&format=json&apiKey=YOUR_KEY
+    
     ```
   - **Приклад запиту для отримання карти:**
     ``` http
