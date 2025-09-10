@@ -37,12 +37,47 @@
 
 ---
 ## 🔗 Використані API
-### 1. **🌤️ OpenWeatherMap API**
+### 1. 🌤️ OpenWeatherMap API
   - **Роль:** Отримання поточної погоди та прогнозу на 5 днів.
 
   - **Документація:** https://openweathermap.org/api
 
-  - Приклад запиту:
+  - **Приклад запиту для поточної погоди:**
     ``` http
     GET https://api.openweathermap.org/data/2.5/weather?q=Brussels&appid=YOUR_KEY&units=metric&lang=ua
     ```
+  - **Приклад запиту для прогнозу на 5 днів:**
+    ``` http
+    GET https://api.openweathermap.org/data/2.5/forecast?q=Brussels&appid=YOUR_KEY&units=metric
+    ```
+  - **Використовується для:**
+    - Поточна температура.
+    - Мінімальна/максимальна температура.
+    - Короткий опис погоди.
+    - Код іконки.
+      
+### 2. 🌤️ WeatherAPI
+  - **Роль:** Отримання почасового прогнозу на поточний день.
+
+  - **Документація:** [https://openweathermap.org/api](https://www.weatherapi.com/)
+
+  - Приклад запиту:
+    ``` http
+    GET GET http://api.weatherapi.com/v1/forecast.json?key=YOUR_KEY&q=Brussels&days=1&aqi=no&alerts=no
+    ```
+  - **Використовується для:**
+    - Почасовий прогноз.
+    - Додаткові погодні показники для побудови графіка.
+
+### 3. 🗺️ Geoapify API
+  - **Роль:** Робота з геолокаціями та картами.
+
+  - **Документація:** https://www.geoapify.com/
+
+  - Приклад запиту:
+    ``` http
+    GET GET http://api.weatherapi.com/v1/forecast.json?key=YOUR_KEY&q=Brussels&days=1&aqi=no&alerts=no
+    ```
+  - **Використовується для:**
+    - Почасовий прогноз.
+    - Додаткові погодні показники для побудови графіка.
