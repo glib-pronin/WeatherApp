@@ -63,7 +63,7 @@
 
   - Приклад запиту:
     ``` http
-    GET http://api.weatherapi.com/v1/forecast.json?key=YOUR_KEY&q=CITY_NAME&days=1&aqi=no&alerts=no
+    
     ```
   - **Використовується для:**
     - Почасовий прогноз.
