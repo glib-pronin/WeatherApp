@@ -215,6 +215,3 @@ pip install -r requirements.txt
 ```
 python main.py
 ```
-``` http
-GET https://api.geoapify.com/v1/geocode/search?text=CITY_NAME+COUNTRY_NAME&format=json&apiKey=YOUR_KEY
-```
