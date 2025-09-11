@@ -73,7 +73,7 @@
   - **Роль:** Робота з геолокаціями та картами.
 
   - **Документація:** https://www.geoapify.com/
-
+  - **Приклад запиту для отримання координат міста:**
     ``` http
     GET https://api.geoapify.com/v1/geocode/search?text=CITY_NAME+COUNTRY_NAME&format=json&apiKey=YOUR_KEY
     ```
