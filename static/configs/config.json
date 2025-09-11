@@ -6,7 +6,8 @@
             "Монреаль",
             "Дніпро",
             "Лієпая",
-            "Одеса"
+            "Одеса",
+            "Львів"
         ],
         "eng": [
             "Barcelona",
@@ -14,12 +15,13 @@
             "Montréal",
             "Dnipro",
             "Liepāja",
-            "Odesa"
+            "Odesa",
+            "Lviv"
         ]
     },
     "selected_city_name": "Монреаль",
     "selected_theme": "dark",
     "main_window_size": "1200x800",
-    "selected_icons_folder": "icons2",
+    "selected_icons_folder": "icons1",
     "selected_lang": "ua"
 }
