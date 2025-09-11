@@ -74,7 +74,6 @@
 
   - **Документація:** https://www.geoapify.com/
 
-   - **Приклад запиту для отримання координат за місто та країною:**  
     ``` http
     GET https://api.geoapify.com/v1/geocode/search?text=CITY_NAME+COUNTRY_NAME&format=json&apiKey=YOUR_KEY
     ```
